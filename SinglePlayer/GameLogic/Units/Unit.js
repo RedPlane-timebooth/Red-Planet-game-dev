@@ -15,8 +15,8 @@ var Unit = (function iife(parent) {
     Unit.prototype = Object.create(parent.prototype);
     Unit.prototype.constructor = Unit;
 
-    Unit.prototype.takeDamage = function damage(player, damage) {
-        this.damage(damage);
+    Unit.prototype.takeHit = function takeHit(bullet, player) {
+        this.damage(bullet.damage);
         if(this.health <= 0){
             this.destroy();
             player.gold += this.goldReward;

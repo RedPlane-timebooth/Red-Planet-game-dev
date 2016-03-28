@@ -4,11 +4,10 @@ var Bullet = (function iife(parent) {
     function Bullet(game, spriteName) {
         parent.call(this, game, 0, 0, spriteName);
 
-        game.bullets.add(this);
         this.checkWorldBounds = true;
         this.outOfBoundsKill = true;
         this.exists = false;
-        this.tracking = true;
+        this.tracking = false;
         this.damage = damage;
     }
 

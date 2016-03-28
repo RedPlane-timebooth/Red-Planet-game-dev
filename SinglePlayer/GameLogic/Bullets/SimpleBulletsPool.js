@@ -4,7 +4,7 @@ var SimpleBulletsPool = (function iife(parent) {
     SimpleBulletsPool = function (game) {
         parent.call(this, game);
 
-        this.bulletSpeed = 50;
+        this.bulletSpeed = 1000;
 
         for (var i = 0; i < 64; i++) {
             this.add(new Bullet(game, 'bullet'), true);

@@ -37,8 +37,7 @@ RedPlanetGame.Game.prototype = {
         this.game.buildings = this.game.add.group();//TODO: make buildings for each player
         this.game.bullets = this.game.add.group();
         this.game.simpleBulletGroup = new SimpleBulletsPool(this.game);
-        this.game.bullets.enableBody = true;
-        this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
         //creep spawning
         var _this = this;
         const creepYOffset = 15;
@@ -70,8 +69,9 @@ RedPlanetGame.Game.prototype = {
         //check for collision between enemy and non-path layer
         this.game.physics.arcade.collide(this.game.enemies, this.backgroundlayer);
         //checks for collision between bullets and enemies
-        this.game.physics.arcade.overlap(this.game.bullets, this.backgroundlayer, function() {
-            console.log('hit')
+        this.game.physics.arcade.overlap(this.game.simpleBulletGroup, this.game.enemies, function(bullet, enemy) {
+            enemy.takeHit(bullet, _this.player);
+            bullet.kill();
         }, null, this);
 
         //updates enemies
@@ -81,7 +81,7 @@ RedPlanetGame.Game.prototype = {
 
         //updates buildings
         this.game.buildings.forEach(function (building) {
-            building.onUpdate();
+            building.onUpdate(_this.game.simpleBulletGroup);
         });
 
         //on mouse down event
