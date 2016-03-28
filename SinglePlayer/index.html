@@ -3,16 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/style/style.css">
 </head>
-<body>
-    <div id="gameCanvas"></div>
+<body >
+    <div id="gameWrapper" >
+        <div id="gameCanvas" ></div>
+    </div>
+
+    <script src="node_modules/phaser/dist/phaser.min.js"></script>
 
     <script src="/GameLogic/Common/globalConstants.js"></script>
-    <script src="node_modules/phaser/dist/phaser.min.js"></script>
+    <script src="/GameLogic/Common/globalFunctions.js"></script>
     <script src="/GameLogic/WorldObject.js"></script>
     <script src="/GameLogic/Units/Unit.js"></script>
     <script src="/GameLogic/Units/Creep1.js"></script>
-    <script src="/GameLogic/UnitsFactory.js"></script>
-    <script src="Phaser/main.js"></script>
+    <script src="/GameLogic/Units/UnitsFactory.js"></script>
+    <script src="/GameLogic/Buildings/Building.js"></script>
+    <script src="/GameLogic/Buildings/Tower.js"></script>
+    <script src="/GameLogic/Buildings/Tower1.js"></script>
+    <script src="/GameLogic/Buildings/BuildingsFactory.js"></script>
+    <script src="/GameLogic/Player.js"></script>
+    <script src="/GameLogic/Bullets/Bullet.js"></script>
+    <script src="/GameLogic/Bullets/SimpleBulletsPool.js"></script>
+    <script src="/Phaser/Boot.js"></script>
+    <script src="/Phaser/Preload.js"></script>
+    <script src="/Phaser/Game.js"></script>
+    <script src="/Phaser/main.js"></script>
 </body>
 </html>

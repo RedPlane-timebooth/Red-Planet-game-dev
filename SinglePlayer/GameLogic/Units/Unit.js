@@ -4,20 +4,27 @@ var Unit = (function iife(parent) {
     const moveAnimationLength = 10;
     const startFrame = 0;
 
-    function Unit(game, x, y, spriteName) {
+    function Unit(game, x, y, spriteName, goldReward) {
         parent.call(this, game, x, y, spriteName, startFrame);
 
         this.animations.add('move');
         this.animations.play('move', moveAnimationLength, true);
-        this.speed = 0;
+        this.goldReward = goldReward;
     }
-    
+
     Unit.prototype = Object.create(parent.prototype);
     Unit.prototype.constructor = Unit;
 
-    Unit.prototype.onUpdate = function onUpdate() {
-        this.x += this.speed;
+    Unit.prototype.takeDamage = function damage(player, damage) {
+        this.damage(damage);
+        if(this.health <= 0){
+            this.destroy();
+            player.gold += this.goldReward;
+        }
     };
-    
+    Unit.prototype.onUpdate = function onUpdate(destination) {
+        this.body.velocity.x = this.speed;
+    };
+
     return Unit;
 }(WorldObject));

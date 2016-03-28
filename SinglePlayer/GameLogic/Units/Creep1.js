@@ -1,14 +1,16 @@
 var Creep1 = (function iife(parent) {
     'use strict';
-
-    const speed = 1;
+    
+    const speed = 50;
     const spriteName = 'creep1';
-
-    function Creep1(game, x, y, group) {
-        parent.call(this, game, x, y, spriteName);
-        
+    const goldReward = 50;
+    
+    function Creep1(game, x, y) {
+        parent.call(this, game, x, y, spriteName, goldReward);
         this.speed = speed;
-        group.add(this);
+        this.scale.setTo(0.5);
+        this.game.enemies.add(this);
+        this.setHealth(100);
     }
 
     Creep1.prototype = Object.create(parent.prototype);
