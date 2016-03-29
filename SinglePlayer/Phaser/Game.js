@@ -35,7 +35,7 @@ RedPlanetGame.Game.prototype = {
         //groups
         this.game.enemies = new UnitsPoolFactory(this.game);
         this.game.buildings = this.game.add.group();//TODO: make buildings for each player
-        this.game.bullets = new BulletPoolFactory(this.game);
+        this.game.bullets = new BulletsPoolFactory(this.game);
 
         //creep spawning
         var _this = this;

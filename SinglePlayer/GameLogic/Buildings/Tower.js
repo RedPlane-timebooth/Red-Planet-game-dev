@@ -1,8 +1,6 @@
 var Tower = (function iife(parent) {
     'use strict';
 
-    const bulletType = 'simpleBullet';
-
     function Tower(game, x, y, spriteName, player, moneyCost, bulletGroup) {
         parent.call(this, game, x, y, spriteName, player, moneyCost);
 

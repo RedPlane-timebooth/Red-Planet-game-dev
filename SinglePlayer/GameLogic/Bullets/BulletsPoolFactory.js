@@ -9,7 +9,7 @@ var simpleBullet = (function iife() {
     };
 }());
 
-var BulletPoolFactory = (function iife(parent) {
+var BulletsPoolFactory = (function iife(parent) {
     'use strict';
 
     const BulletCount = 100;

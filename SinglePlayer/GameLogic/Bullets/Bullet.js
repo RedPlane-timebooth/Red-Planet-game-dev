@@ -30,6 +30,13 @@ var Bullet = (function iife(parent) {
      * @param tracking
      */
     Bullet.prototype.init = function fire(x, y, target, spriteName, speed, damage, tracking) {
+        validator.validateIfNumber(x, spriteName + ' x');
+        validator.validateIfNumber(y, spriteName + ' y');
+        validator.validateIfString(spriteName, spriteName + ' spriteName');
+        validator.validateIfNumber(speed, spriteName + ' speed');
+        validator.validateIfNumber(damage, spriteName + ' damage');
+        validator.validateIfBool(tracking, spriteName + ' tracking');
+
         this.reset(x, y);
         this.key = spriteName;
         this.loadTexture(spriteName, 0);

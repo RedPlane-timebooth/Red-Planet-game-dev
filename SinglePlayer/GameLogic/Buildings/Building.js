@@ -13,8 +13,6 @@ var Building = (function iife(parent) {
         this.playerId =  player.id;
         this.x = x;
         this.y = y;
-        //this.animations.add('build');
-        //this.animations.play('build', buildAnimationLength, true);
     }
 
     Building.prototype = Object.create(parent.prototype);

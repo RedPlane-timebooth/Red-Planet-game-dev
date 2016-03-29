@@ -25,8 +25,8 @@ var UnitsPoolFactory = (function iife(parent) {
     UnitsFactory.prototype = Object.create(parent.prototype);
     UnitsFactory.prototype.constructor = UnitsFactory;
 
-    UnitsFactory.prototype.factory = function (x, y, creep) {
-        switch (creep) {
+    UnitsFactory.prototype.factory = function (x, y, unit) {
+        switch (unit) {
             case CREEP1:
                 this.getFirstExists(false).init(x, y,
                     creep1.spriteName, creep1.goldReward, creep1.speed, creep1.scale, creep1.health);
