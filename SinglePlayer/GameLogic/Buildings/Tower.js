@@ -2,8 +2,10 @@ var Tower = (function iife(parent) {
     'use strict';
 
     function Tower(game, x, y, spriteName, player, moneyCost, bulletGroup) {
-        parent.call(this, game, x, y, spriteName, player, moneyCost);
+        validator.validateIfObject(bulletGroup, this.constructor.name + ' bulletGroup');
         
+        parent.call(this, game, x, y, spriteName, player, moneyCost);
+
         this.bulletGroup = bulletGroup;
         this.fired = {
             is: false

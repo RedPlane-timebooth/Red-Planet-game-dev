@@ -5,6 +5,8 @@ var Unit = (function iife(parent) {
     const startFrame = 0;
 
     function Unit(game, x, y, spriteName, goldReward) {
+        validator.validateIfNumber(goldReward, this.constructor.name + ' goldReward');
+
         parent.call(this, game, x, y, spriteName, startFrame);
 
         this.animations.add('move');

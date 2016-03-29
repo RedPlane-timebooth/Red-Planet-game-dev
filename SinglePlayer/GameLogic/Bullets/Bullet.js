@@ -2,7 +2,7 @@ var Bullet = (function iife(parent) {
     'use strict';
     const damage = 20;
     function Bullet(game, spriteName) {
-        parent.call(this, game, 0, 0, spriteName);
+        parent.call(this, game, 0, 0, spriteName, 0);
 
         this.checkWorldBounds = true;
         this.outOfBoundsKill = true;

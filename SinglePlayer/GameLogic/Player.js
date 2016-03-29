@@ -2,11 +2,21 @@ var Player = (function iife() {
     'use strict';
 
     function Player(id, gold, killed, experience) {
-        this.id = id || 0;
-        this.gold = gold || 0;
-        this.killed = killed || 0;
-        this.experience = experience || 0;
-        
+
+        id = id || 0;
+        gold = gold || 0;
+        killed = killed || 0;
+        experience = experience || 0;
+
+        validator.validateIfNumber(id, 'Player id');
+        validator.validateIfNumber(gold, 'Player gold');
+        validator.validateIfNumber(killed, 'Player killed');
+        validator.validateIfNumber(experience, 'Player experience');
+
+        this.id = id;
+        this.gold = gold;
+        this.killed = killed;
+        this.experience = experience;
     }
 
     Player.prototype.onKill = function onKill(creep) {
