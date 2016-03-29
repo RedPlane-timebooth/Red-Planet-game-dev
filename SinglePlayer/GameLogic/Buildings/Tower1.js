@@ -7,17 +7,18 @@ var Tower1 = (function iife(parent) {
     const spriteNameLevel3 = 'tower1-3';
     const moneyCost = 80;
     const fireSpeed = 1000;
+    const scale = 1;
     
     function Tower1(game, x, y, player) {
         if(player.gold < moneyCost){
             alert('Not enought gold');
             return;
         }
-        parent.call(this, game, x, y, spriteNameLevel1, player, moneyCost, game.simpleBulletGroup);
+        parent.call(this, game, x, y, spriteNameLevel1, player, moneyCost, game.bullets);
 
+        this.bulletType = SIMPLE_BULLET;//global constant
         this.fireSpeed = fireSpeed;
-        //x and y = 4*32px size for testing reasons
-        this.scale.setTo(3.2);
+        this.scale.setTo(scale);
     }
 
     Tower1.prototype = Object.create(parent.prototype);

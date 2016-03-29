@@ -4,10 +4,10 @@ var Building = (function iife(parent) {
     const startFrame = 0;
     
     function Building(game, x, y, spriteName, player, moneyCost) {
-        validator.validateIfNumber(moneyCost, this.constructor.name + ' moneyCost');
-        
         parent.call(this, game, x, y, spriteName, startFrame);
 
+        validator.validateIfNumber(moneyCost, this.constructor.name + ' moneyCost');
+        
         this.game.buildings.add(this);
         player.gold -= moneyCost;
         this.playerId =  player.id;

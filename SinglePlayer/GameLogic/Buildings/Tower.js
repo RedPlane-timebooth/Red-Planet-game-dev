@@ -1,11 +1,12 @@
 var Tower = (function iife(parent) {
     'use strict';
 
+    const bulletType = 'simpleBullet';
+
     function Tower(game, x, y, spriteName, player, moneyCost, bulletGroup) {
-        validator.validateIfObject(bulletGroup, this.constructor.name + ' bulletGroup');
-        
         parent.call(this, game, x, y, spriteName, player, moneyCost);
 
+        validator.validateIfObject(bulletGroup, this.constructor.name + ' bulletGroup');
         this.bulletGroup = bulletGroup;
         this.fired = {
             is: false
@@ -16,9 +17,10 @@ var Tower = (function iife(parent) {
     Tower.prototype.constructor = Tower;
 
     Tower.prototype.fire = function fire() {
+        //TODO: fix aiming mechanism
         var nextTarget = this.game.enemies.children[0];
         if (!this.fired.is && nextTarget) {
-            this.bulletGroup.fire(this.x, this.y, nextTarget);
+            this.bulletGroup.factory(this.x, this.y, nextTarget, this.bulletType);
             buffer(this.fired, this.fireSpeed);
         }
     };

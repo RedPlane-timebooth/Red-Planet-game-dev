@@ -12,7 +12,7 @@
 // require('./GameLogic/Buildings/BuildingsFactory');
 // require('./GameLogic/Player');
 // require('./GameLogic/Bullets/Bullet');
-// require('./GameLogic/Bullets/SimpleBulletsPool');
+// require('./GameLogic/Bullets/BulletPoolFactory');
 // require('./Phaser/Boot');
 // require('./Phaser/Preload');
 // require('./Phaser/Game');

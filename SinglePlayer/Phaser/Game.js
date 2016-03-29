@@ -12,7 +12,7 @@ RedPlanetGame.Game.prototype = {
     create: function create() {
         //A door for multyplayer
         this.players = [];
-        this.player = new Player(1, 300);
+        this.player = new Player(1, 'Daniel', 300);
         this.players.push(this.player);
         this.playerInfo = {};
         //Tile map
@@ -33,16 +33,15 @@ RedPlanetGame.Game.prototype = {
         //this.game.world.setBounds(0, 0, 100, 100);
 
         //groups
-        this.game.enemies = this.game.add.group();
+        this.game.enemies = new UnitsPoolFactory(this.game);
         this.game.buildings = this.game.add.group();//TODO: make buildings for each player
-        this.game.bullets = this.game.add.group();
-        this.game.simpleBulletGroup = new SimpleBulletsPool(this.game);
+        this.game.bullets = new BulletPoolFactory(this.game);
 
         //creep spawning
         var _this = this;
         const creepYOffset = 15;
         setInterval(function () {
-            UnitsFactory(_this.game, _this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, CREEP1);
+            _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, CREEP1);
         }, 1000);
 
         //text and player info
@@ -69,7 +68,7 @@ RedPlanetGame.Game.prototype = {
         //check for collision between enemy and non-path layer
         this.game.physics.arcade.collide(this.game.enemies, this.backgroundlayer);
         //checks for collision between bullets and enemies
-        this.game.physics.arcade.overlap(this.game.simpleBulletGroup, this.game.enemies, function(bullet, enemy) {
+        this.game.physics.arcade.overlap(this.game.bullets, this.game.enemies, function(bullet, enemy) {
             enemy.takeHit(bullet, _this.player);
             bullet.kill();
         }, null, this);
@@ -81,7 +80,7 @@ RedPlanetGame.Game.prototype = {
 
         //updates buildings
         this.game.buildings.forEach(function (building) {
-            building.onUpdate(_this.game.simpleBulletGroup);
+            building.onUpdate(_this.game.bullets);
         });
 
         //on mouse down event
