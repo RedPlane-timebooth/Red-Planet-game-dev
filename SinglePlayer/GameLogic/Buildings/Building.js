@@ -1,22 +1,20 @@
 var Building = (function iife(parent) {
     'use strict';
 
-    const startFrame = 0;
+    const START_FRAME = 0;
     
-    function Building(game, x, y, spriteName, player, moneyCost) {
-        parent.call(this, game, x, y, spriteName, startFrame);
-
-        validator.validateIfNumber(moneyCost, this.constructor.name + ' moneyCost');
+    function Building(game, x, y, spriteName, player) {
+        parent.call(this, game, x, y, spriteName, START_FRAME);
         
         this.game.buildings.add(this);
-        player.gold -= moneyCost;
         this.playerId =  player.id;
-        this.x = x;
-        this.y = y;
     }
 
     Building.prototype = Object.create(parent.prototype);
     Building.prototype.constructor = Building;
-
+    Building.prototype.canBuild = function canBuild(playerMoney, moneyCost) {
+        return playerMoney >= moneyCost;
+    };
+    
     return Building;
 }(WorldObject));

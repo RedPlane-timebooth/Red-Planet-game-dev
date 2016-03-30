@@ -1,9 +1,9 @@
 var Unit = (function iife(parent) {
     'use strict';
 
-    const moveAnimationLength = 10;
-    const x = 0;
-    const y = 0;
+    const MOVE_ANIMATION_LENGTH = 10;
+    const START_X = 0;
+    const START_Y = 0;
 
     /**
      * 
@@ -11,7 +11,7 @@ var Unit = (function iife(parent) {
      * @constructor
      */
     function Unit(game) {
-        parent.call(this, game, x, y);
+        parent.call(this, game, START_X, START_Y);
 
         this.exists = false;
     }
@@ -46,7 +46,7 @@ var Unit = (function iife(parent) {
         this.scale.setTo(scale);
         this.setHealth(health);
         this.animations.add('move');
-        this.animations.play('move', moveAnimationLength, true);
+        this.animations.play('move', MOVE_ANIMATION_LENGTH, true);
     };
     
     Unit.prototype.takeHit = function takeHit(bullet, player) {

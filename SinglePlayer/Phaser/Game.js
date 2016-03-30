@@ -15,6 +15,7 @@ RedPlanetGame.Game.prototype = {
         this.player = new Player(1, 'Daniel', 300);
         this.players.push(this.player);
         this.playerInfo = {};
+        
         //Tile map
         this.map = this.game.add.tilemap('sample2');
         this.map.addTilesetImage('32x32_map_tile v3.1 [MARGINLESS]', 'gameTiles');
@@ -41,7 +42,7 @@ RedPlanetGame.Game.prototype = {
         var _this = this;
         const creepYOffset = 15;
         setInterval(function () {
-            _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, CREEP1);
+            _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, UNIT_TYPES.CREEP1);
         }, 1000);
 
         //text and player info
@@ -87,10 +88,15 @@ RedPlanetGame.Game.prototype = {
         if(this.game.input.activePointer.leftButton.isDown && !pressed.is){//yo Yoda
             //builds new building of type TOWER1
             buffer(pressed, 1000);
-            var poss = this.game.input.mousePointer;
-            BuildingsFactory(this.game, poss.x, poss.y, this.player, TOWER1);
-        }
+            if(Building.prototype.canBuild(this.player.gold, Tower1.prototype.moneyCost)){
+                var poss = this.game.input.mousePointer;
+                BuildingsFactory(this.game, poss.x, poss.y, this.player, BUILDING_TYPES.TOWER1);
+                this.player.gold -= Tower1.prototype.moneyCost
+            } else {
+                alert('Not enought gold');
+            }
 
+        }
     },
     render: function render() {
         this.playerInfo.gold.text = 'Player gold: ' + this.player.gold;
