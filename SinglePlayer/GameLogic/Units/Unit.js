@@ -47,6 +47,7 @@ var Unit = (function iife(parent) {
         this.setHealth(health);
         this.animations.add('move');
         this.animations.play('move', MOVE_ANIMATION_LENGTH, true);
+        this.walked = 0;
     };
     
     Unit.prototype.takeHit = function takeHit(bullet, player) {
@@ -59,6 +60,7 @@ var Unit = (function iife(parent) {
     
     Unit.prototype.onUpdate = function onUpdate(destination) {
         this.body.velocity.x = this.speed;
+        this.walked++;
     };
 
     return Unit;

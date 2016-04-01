@@ -13,6 +13,7 @@ var Tower1 = (function iife(parent) {
         this.bulletType = BULLET_TYPES.BULLET;//global constant
         this.fireSpeed = FIRE_SPEED;
         this.scale.setTo(SCALE);
+        this.body.setSize(120, 80);
     }
 
     Tower1.prototype = Object.create(parent.prototype);

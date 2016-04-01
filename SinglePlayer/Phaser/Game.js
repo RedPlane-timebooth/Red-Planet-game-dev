@@ -6,9 +6,12 @@ var pressed = {
     buildingOverlaps = {
         is: false
     },
+    movedToPointer = {
+        is: false
+    },
+
     canBuild = true,
-    buildState = false,
-    buildingRed = false;
+    buildState = false;
 
 //title screen
 RedPlanetGame.Game = function () {
@@ -64,15 +67,17 @@ RedPlanetGame.Game.prototype = {
         );
 
         //add buttons
+        var scaleTower1 = 0.5;
         this.game.add.button(this.game.world.centerX, gameHeight - 30, 'tower1-button', function onBuildTower1() {
             _this.currentBuilding = _this.game.add.sprite(_this.game.input.x - 50, _this.game.input.y - 50, 'tower1', 0);
             _this.game.physics.enable(_this.currentBuilding, Phaser.Physics.ARCADE);
             _this.currentBuilding.anchor.setTo(0.5);
-            _this.currentBuilding.scale.setTo(0.5);
-            _this.currentBuilding.anchor.setTo(0.5);
-            //$('canvas').css('cursor', 'none');
+            _this.currentBuilding.scale.setTo(scaleTower1);
+
+            //_this.currentBuilding.body.setSize(120, 80);
+            _this.currentBuilding.anchor.setTo(scaleTower1);
             buildState = true;
-        }).scale.setTo(0.5);
+        }).scale.setTo(scaleTower1);
     },
     update: function update() {
 
@@ -109,8 +114,14 @@ RedPlanetGame.Game.prototype = {
 
         //on building state
         if (buildState) {
+            $('canvas').css('cursor', 'none');
             //new building sprite follows cursor
-            this.game.physics.arcade.moveToPointer(this.currentBuilding, 3000);
+            this.game.physics.arcade.moveToPointer(this.currentBuilding, 900);
+            if(!movedToPointer.is){
+                this.currentBuilding.body.velocity.setTo(0);
+                buffer(movedToPointer, 100);
+            }
+
             //if tower overlaps
             if (Phaser.Rectangle.contains(this.currentBuilding.body, this.game.input.x, this.game.input.y)) {
                 this.currentBuilding.body.velocity.setTo(0);

@@ -11,8 +11,8 @@ RedPlanetGame.Preload.prototype = {
         this.preloadBar.anchor.setTo(0.5);
 
         this.load.image('tower1-button', '/assets/buildings/buttons/tower1-button.png');
-        this.load.spritesheet('creep1', '/assets/creeps/creep1.png', 80, 80, 14, 1);
-        this.load.spritesheet('tower1', '/assets/buildings/towers/tower1.png', 240, 160, 16);
+        this.load.spritesheet('creep1', '/assets/creeps/creep1.png', 80, 80, 14);
+        this.load.spritesheet('tower1', '/assets/buildings/towers/tower1.png', 240, 158, 16);
         this.load.image('bullet', '/assets/images/bullet.png');
         this.load.setPreloadSprite(this.preloadBar);
 
