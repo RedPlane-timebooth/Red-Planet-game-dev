@@ -2,15 +2,13 @@ var Tower1 = (function iife(parent) {
     'use strict';
 
     //TODO: unite in one spritesheet
-    const spriteNameLevel1 = 'tower1-1';
-    const spriteNameLevel2 = 'tower1-2';
-    const spriteNameLevel3 = 'tower1-3';
+    const spriteSheetLevel1 = 'tower1';
     const MONEY_COST = 80;
     const FIRE_SPEED = 1000;
-    const SCALE = 1;
+    const SCALE = 0.5;
     
     function Tower1(game, x, y, player) {
-        parent.call(this, game, x, y, spriteNameLevel1, player);
+        parent.call(this, game, x, y, spriteSheetLevel1, player);
 
         this.bulletType = BULLET_TYPES.BULLET;//global constant
         this.fireSpeed = FIRE_SPEED;

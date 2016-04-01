@@ -1,8 +1,14 @@
 var RedPlanetGame = RedPlanetGame || {};
 
 var pressed = {
-    is: false
-};
+        is: false
+    },
+    buildingOverlaps = {
+        is: false
+    },
+    canBuild = true,
+    buildState = false,
+    buildingRed = false;
 
 //title screen
 RedPlanetGame.Game = function () {
@@ -15,7 +21,7 @@ RedPlanetGame.Game.prototype = {
         this.player = new Player(1, 'Daniel', 300);
         this.players.push(this.player);
         this.playerInfo = {};
-        
+
         //Tile map
         this.map = this.game.add.tilemap('sample2');
         this.map.addTilesetImage('32x32_map_tile v3.1 [MARGINLESS]', 'gameTiles');
@@ -24,7 +30,7 @@ RedPlanetGame.Game.prototype = {
         this.backgroundlayer = this.map.createLayer('backgroundLayer');
         this.path = this.map.createLayer('path');
         this.map.setCollisionBetween(1, 2000, true, 'backgroundLayer');
-
+        this.map.setCollisionBetween(1, 2000, true, 'path');
         //objects from tile map
         this.spawnCreepsAt = this.map.objects['objectsLayer'][0];
         this.destinationForCreeps = this.map.objects['objectsLayer'][1];
@@ -37,6 +43,11 @@ RedPlanetGame.Game.prototype = {
         this.game.enemies = new UnitsPoolFactory(this.game);
         this.game.buildings = this.game.add.group();//TODO: make buildings for each player
         this.game.bullets = new BulletsPoolFactory(this.game);
+        this.game.invisiblePath = this.game.add.group();
+
+        //creates invisible path for the towers to collide with (tiled path has bounds like the full map and it is useless)
+        createInvisiblePath('path', this.map, 'objectsLayer', this.game, this.game.invisiblePath);
+        this.game.physics.enable(this.game.invisiblePath, Phaser.Physics.ARCADE);
 
         //creep spawning
         var _this = this;
@@ -49,10 +60,22 @@ RedPlanetGame.Game.prototype = {
         var textX = 150;
         var textY = 0;
         this.playerInfo.gold = this.game.add.text(textX, textY, 'Player gold: ' + this.player.gold,
-            { font: "24px Arial", fill: '#FFD700' }
+            {font: "24px Arial", fill: '#FFD700'}
         );
+
+        //add buttons
+        this.game.add.button(this.game.world.centerX, gameHeight - 30, 'tower1-button', function onBuildTower1() {
+            _this.currentBuilding = _this.game.add.sprite(_this.game.input.x - 50, _this.game.input.y - 50, 'tower1', 0);
+            _this.game.physics.enable(_this.currentBuilding, Phaser.Physics.ARCADE);
+            _this.currentBuilding.anchor.setTo(0.5);
+            _this.currentBuilding.scale.setTo(0.5);
+            _this.currentBuilding.anchor.setTo(0.5);
+            //$('canvas').css('cursor', 'none');
+            buildState = true;
+        }).scale.setTo(0.5);
     },
     update: function update() {
+
         var _this = this;
         //Camera follow cursor
         if (this.game.input.mousePointer.x > gameHeight - gameHeight / 10) {
@@ -69,7 +92,7 @@ RedPlanetGame.Game.prototype = {
         //check for collision between enemy and non-path layer
         this.game.physics.arcade.collide(this.game.enemies, this.backgroundlayer);
         //checks for collision between bullets and enemies
-        this.game.physics.arcade.overlap(this.game.bullets, this.game.enemies, function(bullet, enemy) {
+        this.game.physics.arcade.overlap(this.game.bullets, this.game.enemies, function (bullet, enemy) {
             enemy.takeHit(bullet, _this.player);
             bullet.kill();
         }, null, this);
@@ -84,21 +107,56 @@ RedPlanetGame.Game.prototype = {
             building.onUpdate(_this.game.bullets);
         });
 
+        //on building state
+        if (buildState) {
+            //new building sprite follows cursor
+            this.game.physics.arcade.moveToPointer(this.currentBuilding, 3000);
+            //if tower overlaps
+            if (Phaser.Rectangle.contains(this.currentBuilding.body, this.game.input.x, this.game.input.y)) {
+                this.currentBuilding.body.velocity.setTo(0);
+            }
+            this.game.physics.arcade.overlap(this.currentBuilding, this.game.invisiblePath,
+                this.onBuildingOverlap, null, this);
+            this.game.physics.arcade.overlap(this.currentBuilding, this.game.buildings,
+                this.onBuildingOverlap, null, this);
+        }
+
         //on mouse down event
-        if(this.game.input.activePointer.leftButton.isDown && !pressed.is){//yo Yoda
+        if (this.game.input.activePointer.leftButton.isDown && buildState && canBuild && !pressed.is) {//yo Yoda
             //builds new building of type TOWER1
             buffer(pressed, 1000);
-            if(Building.prototype.canBuild(this.player.gold, Tower1.prototype.moneyCost)){
-                var poss = this.game.input.mousePointer;
-                BuildingsFactory(this.game, poss.x, poss.y, this.player, BUILDING_TYPES.TOWER1);
-                this.player.gold -= Tower1.prototype.moneyCost
+            if (Building.prototype.canBuild(this.player.gold, Tower1.prototype.moneyCost)) {
+                BuildingsFactory(
+                    this.game,
+                    this.currentBuilding.x,
+                    this.currentBuilding.y,
+                    this.player, BUILDING_TYPES.TOWER1
+                );
+                this.player.gold -= Tower1.prototype.moneyCost;
             } else {
                 alert('Not enought gold');
             }
 
+            buildState = false;
+            this.currentBuilding.destroy();
+            $('canvas').css('cursor', 'default');
         }
+
+
+        canBuild = true;
     },
     render: function render() {
         this.playerInfo.gold.text = 'Player gold: ' + this.player.gold;
+
+    },
+    onBuildingOverlap: function onBuildingOverlap(currentBuilding) {
+        canBuild = false;
+        if (!buildingOverlaps.is) {
+            buffer(buildingOverlaps, 200);
+            currentBuilding.tint = 0xff0000;
+            setTimeout(function() {
+                currentBuilding.tint = 0xffffff;
+            }, 100);
+        }
     }
 };
