@@ -1,5 +1,6 @@
 var Tower = (function iife(parent) {
     'use strict';
+    var nextTarget = null;
 
     function Tower(game, x, y, spriteName, player, bulletType, fireSpeed, scale, range) {
         parent.call(this, game, x, y, spriteName, player);
@@ -13,15 +14,16 @@ var Tower = (function iife(parent) {
         this.fireSpeed = fireSpeed;
         this.scale.setTo(scale);
         this.range = range;
-
-        this.fired = {
-            is: false
-        };
-        this.searchedForTarget = {
-            is: false
-        };
         this.nextTarget = null;
-
+        this.buffers = {
+            fired: {
+                is: false
+            },
+            searchedForTarget: {
+                is: false
+            }
+        };
+        
         //draws circle around the tower when build for now TODO: move this when clicked on tower and when in build state
         var circles = this.game.add.graphics(this.x, this.y);
         circles.lineStyle(1, 0xff0000);
@@ -32,15 +34,16 @@ var Tower = (function iife(parent) {
     Tower.prototype.constructor = Tower;
 
     Tower.prototype.fire = function fire() {
-        if (!this.fired.is && this.nextTarget) {
+        if (!this.buffers.fired.is) {
             this.game.bullets.factory(this.x, this.y, this.nextTarget, this.bulletType);
-            buffer(this.fired, this.fireSpeed);
+            buffer(this.buffers.fired, this.fireSpeed, this.game);
         }
     };
 
+    //TODO: check first whos with less health then shoot most forward?
     Tower.prototype.findTarget = function findTarget() {
-        if(!this.searchedForTarget.is){
-            var nextTarget = null;
+        if(!this.buffers.searchedForTarget.is){
+            nextTarget = null;
             this.game.enemies.forEachExists(function(enemy) {
                 if(this.game.physics.arcade.distanceBetween(this, enemy) < this.range){
                     if(nextTarget === null || nextTarget.walked < enemy.walked){
@@ -49,13 +52,15 @@ var Tower = (function iife(parent) {
                 }
             }, this);
             this.nextTarget = nextTarget;
-            buffer(this.searchedForTarget, 250);
+            buffer(this.buffers.searchedForTarget, 250, this.game);
         }
     };
 
     Tower.prototype.onUpdate = function onUpdate() {
         this.findTarget();
-        this.fire();
+        if(this.nextTarget){
+            this.fire();
+        }
     };
     
     return Tower;

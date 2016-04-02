@@ -1,5 +1,4 @@
-var RedPlanetGame = RedPlanetGame || {};
-RedPlanetGame.game = new Phaser.Game(gameHeight, gameWidth, Phaser.AUTO, 'gameCanvas');
+RedPlanetGame.game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, 'gameCanvas');
 
 RedPlanetGame.game.state.add('Boot', RedPlanetGame.Boot);
 RedPlanetGame.game.state.add('Preload', RedPlanetGame.Preload);

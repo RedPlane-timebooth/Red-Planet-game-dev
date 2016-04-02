@@ -1,8 +1,8 @@
-function buffer(object, time) {
+function buffer(object, time, game) {
     object.is = true;
-    setTimeout(function () {
-        object.is = false;
-    }, time);
+    game.time.events.add(time, function() {
+        object.is = false
+    } , RedPlanetGame.Game);
 }
 function createInvisiblePath(type, map, layer, game, group) {
     var result = [];
