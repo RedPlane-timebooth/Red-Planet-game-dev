@@ -28,8 +28,10 @@ var Unit = (function iife(parent) {
      * @param speed
      * @param scale
      * @param health
+     * @param defence
+     * @param isAir
      */
-    Unit.prototype.init = function init(x, y, spriteName, goldReward, speed, scale, health) {
+    Unit.prototype.init = function init(x, y, spriteName, goldReward, speed, scale, health, defence, isAir) {
         validator.validateIfNumber(x, spriteName + ' x');
         validator.validateIfNumber(y, spriteName + ' y');
         validator.validateIfString(spriteName, spriteName + ' spriteName');
@@ -37,6 +39,8 @@ var Unit = (function iife(parent) {
         validator.validateIfNumber(speed, spriteName + ' speed');
         validator.validateIfNumber(scale, spriteName + ' scale');
         validator.validateIfNumber(health, spriteName + ' health');
+        validator.validateIfNumber(defence, spriteName + ' defence');
+        validator.validateIfBool(isAir, spriteName + ' isAir');
         
         this.reset(x, y);
         this.key = spriteName;
@@ -45,13 +49,21 @@ var Unit = (function iife(parent) {
         this.speed = speed;
         this.scale.setTo(scale);
         this.setHealth(health);
+        this.defence = defence;
+        this.isAir = isAir;
         this.animations.add('move');
         this.animations.play('move', MOVE_ANIMATION_LENGTH, true);
         this.walked = 0;
     };
-    
+
+    /**
+     * 
+     * @param bullet
+     * @param player
+     */
     Unit.prototype.takeHit = function takeHit(bullet, player) {
-        this.damage(bullet.damage);
+        var calculateHitDamage = bullet.damage - (bullet.damage * this.defence) / 100;
+        this.damage(calculateHitDamage);
         if(this.health <= 0){
             this.kill();
             player.gold += this.goldReward;
@@ -62,6 +74,5 @@ var Unit = (function iife(parent) {
         this.body.velocity.x = this.speed;
         this.walked++;
     };
-
     return Unit;
 }(WorldObject));

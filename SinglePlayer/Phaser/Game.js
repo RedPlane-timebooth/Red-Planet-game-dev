@@ -1,16 +1,17 @@
 var RedPlanetGame = RedPlanetGame || {};
 
-var pressed = {
+var buffers = {
+    pressed: pressed = {
         is: false
     },
-    buildingOverlaps = {
+    buildingOverlaps: buildingOverlaps = {
         is: false
     },
-    movedToPointer = {
+    movedToPointer: movedToPointer = {
         is: false
-    },
-
-    canBuild = true,
+    }
+};
+var canBuild = true,
     buildState = false;
 
 //title screen
@@ -117,10 +118,6 @@ RedPlanetGame.Game.prototype = {
             $('canvas').css('cursor', 'none');
             //new building sprite follows cursor
             this.game.physics.arcade.moveToPointer(this.currentBuilding, 900);
-            if(!movedToPointer.is){
-                this.currentBuilding.body.velocity.setTo(0);
-                buffer(movedToPointer, 100);
-            }
 
             //if tower overlaps
             if (Phaser.Rectangle.contains(this.currentBuilding.body, this.game.input.x, this.game.input.y)) {
@@ -133,17 +130,17 @@ RedPlanetGame.Game.prototype = {
         }
 
         //on mouse down event
-        if (this.game.input.activePointer.leftButton.isDown && buildState && canBuild && !pressed.is) {//yo Yoda
+        if (this.game.input.activePointer.leftButton.isDown && buildState && canBuild && !buffers.pressed.is) {//yo Yoda
             //builds new building of type TOWER1
-            buffer(pressed, 1000);
-            if (Building.prototype.canBuild(this.player.gold, Tower1.prototype.moneyCost)) {
+            buffer(buffers.pressed, 1000);
+            if (Building.prototype.canBuild(this.player.gold, Tower1.prototype.MONEY_COST)) {
                 BuildingsFactory(
                     this.game,
                     this.currentBuilding.x,
                     this.currentBuilding.y,
                     this.player, BUILDING_TYPES.TOWER1
                 );
-                this.player.gold -= Tower1.prototype.moneyCost;
+                this.player.gold -= Tower1.prototype.MONEY_COST;
             } else {
                 alert('Not enought gold');
             }
@@ -153,7 +150,6 @@ RedPlanetGame.Game.prototype = {
             $('canvas').css('cursor', 'default');
         }
 
-
         canBuild = true;
     },
     render: function render() {
@@ -162,10 +158,10 @@ RedPlanetGame.Game.prototype = {
     },
     onBuildingOverlap: function onBuildingOverlap(currentBuilding) {
         canBuild = false;
-        if (!buildingOverlaps.is) {
-            buffer(buildingOverlaps, 200);
+        if (!buffers.buildingOverlaps.is) {
+            buffer(buffers.buildingOverlaps, 200);
             currentBuilding.tint = 0xff0000;
-            setTimeout(function() {
+            setTimeout(function () {
                 currentBuilding.tint = 0xffffff;
             }, 100);
         }

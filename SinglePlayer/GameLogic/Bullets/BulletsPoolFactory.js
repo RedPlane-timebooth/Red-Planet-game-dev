@@ -9,6 +9,11 @@ var BulletsPoolFactory = (function iife(parent) {
         tracking: false
     };
 
+    /**
+     * 
+     * @param game
+     * @constructor
+     */
     function BulletPoolFactory(game) {
         parent.call(this, game);
         for (var i = 0; i < BulletCount; i++) {
@@ -19,6 +24,13 @@ var BulletsPoolFactory = (function iife(parent) {
     BulletPoolFactory.prototype = Object.create(parent.prototype);
     BulletPoolFactory.prototype.constructor = BulletPoolFactory;
 
+    /**
+     * 
+     * @param sourceX
+     * @param sourceY
+     * @param target
+     * @param bulletType
+     */
     BulletPoolFactory.prototype.factory = function (sourceX, sourceY, target, bulletType) {
         switch (bulletType) {
             case BULLET_TYPES.BULLET:

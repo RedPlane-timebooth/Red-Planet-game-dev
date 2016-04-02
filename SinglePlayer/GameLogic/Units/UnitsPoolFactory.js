@@ -7,7 +7,9 @@ var UnitsPoolFactory = (function iife(parent) {
         goldReward: 50,
         speed: 50,
         scale: 0.4,
-        health: 100
+        health: 100,
+        defence: 10,
+        isAir: false
     };
 
     function UnitsPoolFactory(game) {
@@ -20,11 +22,18 @@ var UnitsPoolFactory = (function iife(parent) {
     UnitsPoolFactory.prototype = Object.create(parent.prototype);
     UnitsPoolFactory.prototype.constructor = UnitsPoolFactory;
 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param unitType
+     */
     UnitsPoolFactory.prototype.factory = function (x, y, unitType) {
         switch (unitType) {
             case UNIT_TYPES.CREEP1:
                 this.getFirstExists(false).init(x, y,
-                    creep1.spriteName, creep1.goldReward, creep1.speed, creep1.scale, creep1.health);
+                    creep1.spriteName, creep1.goldReward, creep1.speed, creep1.scale, creep1.health,
+                creep1.defence, creep1.isAir);
         }
     };
 
