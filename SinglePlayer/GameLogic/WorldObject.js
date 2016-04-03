@@ -7,7 +7,7 @@ var WorldObject = (function iife(parent) {
      * @param x
      * @param y
      * @param spriteName
-     * @param frames
+     * @param startFrame
      * @constructor
      */
     function WorldObject(game, x, y, spriteName, startFrame) {
