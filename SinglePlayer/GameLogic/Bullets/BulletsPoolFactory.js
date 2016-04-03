@@ -5,8 +5,7 @@ var BulletsPoolFactory = (function iife(parent) {
     const simpleBullet = {
         spriteName: 'bullet',
         bulletSpeed: 1000,
-        bulletDamage: 20,
-        tracking: false
+        tracking: true
     };
 
     /**
@@ -30,12 +29,13 @@ var BulletsPoolFactory = (function iife(parent) {
      * @param sourceY
      * @param target
      * @param bulletType
+     * @param damage
      */
-    BulletPoolFactory.prototype.factory = function (sourceX, sourceY, target, bulletType) {
+    BulletPoolFactory.prototype.factory = function (sourceX, sourceY, target, bulletType, damage) {
         switch (bulletType) {
             case BULLET_TYPES.BULLET:
                 this.getFirstExists(false).init(sourceX, sourceY, target,
-                    simpleBullet.spriteName, simpleBullet.bulletSpeed, simpleBullet.bulletDamage, simpleBullet.tracking);
+                    simpleBullet.spriteName, simpleBullet.bulletSpeed, damage, simpleBullet.tracking);
         }
     };
 

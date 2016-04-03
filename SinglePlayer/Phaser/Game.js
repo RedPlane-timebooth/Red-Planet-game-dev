@@ -40,7 +40,7 @@ RedPlanetGame.Game = (function iife() {
             setInterval(function () {
                 _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, 
                     UNIT_TYPES.CREEP1, _this.checkPoints);
-            }, 1000);
+            }, 3000);
 
         },
         update: function update() {

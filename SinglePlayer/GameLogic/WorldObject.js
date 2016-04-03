@@ -28,6 +28,12 @@ var WorldObject = (function iife(parent) {
 
     WorldObject.prototype = Object.create(parent.prototype);
     WorldObject.prototype.constructor = WorldObject;
+
+    WorldObject.prototype.getPersonalInfo = function showPersonalInfo() {
+        return {
+            spriteKey: this.key
+        }
+    };
     
     return WorldObject;
 }(Phaser.Sprite));

@@ -12,8 +12,11 @@ var Unit = (function iife(parent) {
      */
     function Unit(game) {
         parent.call(this, game, START_X, START_Y);
-
         this.exists = false;
+        
+        this.inputEnabled = true;
+        var _this = this;
+        this.events.onInputDown.add(_this.showPersonalInfo, this);
     }
 
     Unit.prototype = Object.create(parent.prototype);
@@ -57,47 +60,55 @@ var Unit = (function iife(parent) {
         this.walked = 0;
         this.body.setSize(32, 32);
 
-        this.checkPoints = checkPoints;
-        this.currentCheckPoint = 0;
-        this.game.physics.arcade.moveToObject(this, this.checkPoints[this.currentCheckPoint], this.speed);
-        this.buffers = {
-            checkedForReachedCheckPoint: {
-                is: false
-            }
-        };
+        //define unit movement based on checkpoints with Phaser tween system ( I prefer events over watchers )
+        var currentCheckPoint = 0,
+            _this = this;
+        this.tweens = [];
+        checkPoints.forEach(function(checkPoint){
+            _this.tweens.push(_this.game.add.tween(_this).to( { x: checkPoint.x, y: checkPoint.y }, _this.calculateTimeForTween(checkPoint)));
+            currentCheckPoint++;
+        });
+        for (var i = 0; i < currentCheckPoint - 1; i++) {
+            this.tweens[i].chain(this.tweens[i + 1]);
+        }
+        this.tweens[0].start();
+        this.tweens[currentCheckPoint - 1].onComplete.add(function onEndReach() {
+            //alert('reached end');
+            this.kill();
+        }, this);
     };
 
-    /**
-     * 
-     * @param bullet
-     * @param player
-     */
     Unit.prototype.takeHit = function takeHit(bullet, player) {
         var calculateHitDamage = bullet.damage - (bullet.damage * this.defence) / 100;
         this.damage(calculateHitDamage);
         if(this.health <= 0){
             this.kill();
             player.gold += this.goldReward;
+            player.killed += 1;
         }
     };
-    
     Unit.prototype.onUpdate = function onUpdate() {
-        if(!this.buffers.checkedForReachedCheckPoint.is){
-            buffer(this.buffers.checkedForReachedCheckPoint, 200, this.game);
-            if(this.game.physics.arcade.distanceBetween(this, this.checkPoints[this.currentCheckPoint]) < 15){
-                if(this.checkPoints[++this.currentCheckPoint]){
-                    this.game.physics.arcade.moveToObject(this, this.checkPoints[this.currentCheckPoint], this.speed);
-                } else {
-                    this.kill();
-                    alert('end reached');
-                }
-            }
-        }
         this.walked++;
     };
-    
+    Unit.prototype.kill = function kill() {
+        parent.prototype.kill.call(this);
+        this.tweens.forEach(function(tween){
+            tween.stop();
+        });
+    };
     Unit.prototype.calculateTimeForTween = function(destination) {
-        console.log(this.game.physics.arcade.distanceBetween(this, destination))
+        return this.game.physics.arcade.distanceBetween(this, destination) * (100 / this.speed);
+    };
+    Unit.prototype.getPersonalInfo = function getPersonalInfo() {
+        var info = parent.prototype.getPersonalInfo.call(this);
+        info.health = this.health;
+        info.speed = this.speed;
+        info.defence = this.defence;
+        info.infoType = 'unit';
+        return info;
+    };
+    Unit.prototype.showPersonalInfo = function showPersonalInfo() {
+        console.log(this.getPersonalInfo())
     };
 
     return Unit;

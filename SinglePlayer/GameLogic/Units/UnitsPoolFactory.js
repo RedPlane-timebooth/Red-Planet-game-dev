@@ -5,7 +5,7 @@ var UnitsPoolFactory = (function iife(parent) {
     const creep1 = {
         spriteName: 'creep1',
         goldReward: 50,
-        speed: 150,
+        speed: 10,
         scale: 0.4,
         health: 100,
         defence: 10,
