@@ -68,7 +68,8 @@ RedPlanetGame.Game = (function iife() {
             this.updateUI(this.game.camera.x, this.game.camera.y);
         },
         render: function render() {
-            this.ui.gold.text = 'Player gold: ' + this.player.gold;
+            this.ui.gold.text = 'gold: ' + this.player.gold;
+            this.ui.killed.text = 'killed: ' + this.player.killed;
         },
         initMapLayersGroups: function init() {
             //Tile map
@@ -102,8 +103,14 @@ RedPlanetGame.Game = (function iife() {
             //text and player info
             var textX = 150;
             var textY = 0;
-            this.ui.gold = this.game.add.text(textX, textY, 'Player gold: ' + this.player.gold,
+            this.ui.gold = this.game.add.text(textX, textY, 'gold: ' + this.player.gold,
                 {font: "24px Arial", fill: '#FFD700'}
+            );
+
+            textX = 300;
+            textY = 0;
+            this.ui.killed = this.game.add.text(textX, textY, 'killed: ' + this.player.gold,
+                {font: "24px Arial", fill: '#ff00ff'}
             );
 
             var scaleTower1 = 0.5;
