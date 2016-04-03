@@ -4,6 +4,7 @@ RedPlanetGame.Game = (function iife() {
     'use strict';
     var canBuild = true,
         buildState = false,
+        buildStateBuildingRed = true,
         _this = null,
         buffers = {
             pressed: {
@@ -86,6 +87,7 @@ RedPlanetGame.Game = (function iife() {
 
                 //_this.currentBuilding.body.setSize(120, 80);
                 this.currentBuilding.anchor.setTo(scaleTower1);
+                this.currentBuilding.alpha = 0.8;
                 this.game.time.events.add(100, function() {
                     buildState = true
                 } , this);
@@ -137,16 +139,21 @@ RedPlanetGame.Game = (function iife() {
             if (buildState) {
                 $('canvas').css('cursor', 'none');
                 //new building sprite follows cursor
-                this.game.physics.arcade.moveToPointer(this.currentBuilding, 900);
+                this.game.physics.arcade.moveToPointer(this.currentBuilding, 800);
 
                 //if tower overlaps
                 if (Phaser.Rectangle.contains(this.currentBuilding.body, this.game.input.x, this.game.input.y)) {
                     this.currentBuilding.body.velocity.setTo(0);
                 }
+                
+                buildStateBuildingRed = false;
+                
                 this.game.physics.arcade.overlap(this.currentBuilding, this.game.invisiblePath,
                     this.onBuildingOverlap, null, this);
                 this.game.physics.arcade.overlap(this.currentBuilding, this.game.buildings,
                     this.onBuildingOverlap, null, this);
+
+                this.currentBuilding.tint = buildStateBuildingRed ? 0xff0000 : 0xffffff;
             }
 
             //on mouse down event
@@ -181,13 +188,14 @@ RedPlanetGame.Game = (function iife() {
         },
         onBuildingOverlap: function onBuildingOverlap(currentBuilding) {
             canBuild = false;
-            if (!buffers.buildingOverlaps.is) {
-                buffer(buffers.buildingOverlaps, 200, this.game);
-                currentBuilding.tint = 0xff0000;
-                setTimeout(function () {
-                    currentBuilding.tint = 0xffffff;
-                }, 100);
-            }
+            buildStateBuildingRed = true;
+            // if (!buffers.buildingOverlaps.is) {
+            //     buffer(buffers.buildingOverlaps, 200, this.game);
+            //     currentBuilding.tint = 0xff0000;
+            //     setTimeout(function () {
+            //         currentBuilding.tint = 0xffffff;
+            //     }, 100);
+            // }
         }
     };
 
