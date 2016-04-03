@@ -23,6 +23,7 @@ var Unit = (function iife(parent) {
      * 
      * @param x
      * @param y
+     * @param checkPoints
      * @param spriteName
      * @param goldReward
      * @param speed
@@ -31,7 +32,7 @@ var Unit = (function iife(parent) {
      * @param defence
      * @param isAir
      */
-    Unit.prototype.init = function init(x, y, spriteName, goldReward, speed, scale, health, defence, isAir) {
+    Unit.prototype.init = function init(x, y, checkPoints, spriteName, goldReward, speed, scale, health, defence, isAir) {
         validator.validateIfNumber(x, spriteName + ' x');
         validator.validateIfNumber(y, spriteName + ' y');
         validator.validateIfString(spriteName, spriteName + ' spriteName');
@@ -54,6 +55,16 @@ var Unit = (function iife(parent) {
         this.animations.add('move');
         this.animations.play('move', MOVE_ANIMATION_LENGTH, true);
         this.walked = 0;
+        this.body.setSize(32, 32);
+
+        this.checkPoints = checkPoints;
+        this.currentCheckPoint = 0;
+        this.game.physics.arcade.moveToObject(this, this.checkPoints[this.currentCheckPoint], this.speed);
+        this.buffers = {
+            checkedForReachedCheckPoint: {
+                is: false
+            }
+        };
     };
 
     /**
@@ -70,9 +81,24 @@ var Unit = (function iife(parent) {
         }
     };
     
-    Unit.prototype.onUpdate = function onUpdate(destination) {
-        this.body.velocity.x = this.speed;
+    Unit.prototype.onUpdate = function onUpdate() {
+        if(!this.buffers.checkedForReachedCheckPoint.is){
+            buffer(this.buffers.checkedForReachedCheckPoint, 200, this.game);
+            if(this.game.physics.arcade.distanceBetween(this, this.checkPoints[this.currentCheckPoint]) < 15){
+                if(this.checkPoints[++this.currentCheckPoint]){
+                    this.game.physics.arcade.moveToObject(this, this.checkPoints[this.currentCheckPoint], this.speed);
+                } else {
+                    this.kill();
+                    alert('end reached');
+                }
+            }
+        }
         this.walked++;
     };
+    
+    Unit.prototype.calculateTimeForTween = function(destination) {
+        console.log(this.game.physics.arcade.distanceBetween(this, destination))
+    };
+
     return Unit;
 }(WorldObject));

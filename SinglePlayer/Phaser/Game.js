@@ -38,7 +38,8 @@ RedPlanetGame.Game = (function iife() {
 
             const creepYOffset = 15;
             setInterval(function () {
-                _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, UNIT_TYPES.CREEP1);
+                _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, 
+                    UNIT_TYPES.CREEP1, _this.checkPoints);
             }, 1000);
 
         },
@@ -52,8 +53,8 @@ RedPlanetGame.Game = (function iife() {
                 bullet.kill();
             }, null, this);
             //updates enemies
-            this.game.enemies.forEach(function (enemy) {
-                enemy.onUpdate(_this.destinationForCreeps);
+            this.game.enemies.forEachExists(function (enemy) {
+                enemy.onUpdate(_this.map.objects['objectsLayer'][6]);
             });
             //updates buildings
             this.game.buildings.forEach(function (building) {
@@ -89,9 +90,12 @@ RedPlanetGame.Game = (function iife() {
             this.game.buildings = this.game.add.group();//TODO: make buildings for each player
             this.game.bullets = new BulletsPoolFactory(this.game);
             this.game.invisiblePath = this.game.add.group();
+            this.game.checkPoints = this.game.add.group();
             //creates invisible path for the towers to collide with (tiled path has bounds like the full map and it is useless)
-            createInvisiblePath('path', this.map, 'objectsLayer', this.game, this.game.invisiblePath);
+            createInvisibleSpriteGroupFromMapObjects('path', this.map, 'objectsLayer', this.game, this.game.invisiblePath);
             this.game.physics.enable(this.game.invisiblePath, Phaser.Physics.ARCADE);
+            //creates checkPoints for creeps
+            this.checkPoints = createCheckPoints('checkPoint', this.map, 'objectsLayer');
         },
         initUI: function initUI() {
             this.ui = {};
