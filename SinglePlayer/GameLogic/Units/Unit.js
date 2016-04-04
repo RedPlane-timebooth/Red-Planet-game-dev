@@ -89,18 +89,22 @@ var Unit = (function iife(parent) {
             player.killed += 1;
         }
     };
+    
     Unit.prototype.onUpdate = function onUpdate() {
         this.walked++;
     };
+    
     Unit.prototype.kill = function kill() {
         parent.prototype.kill.call(this);
         this.tweens.forEach(function(tween){
             tween.stop();
         });
     };
+    
     Unit.prototype.calculateTimeForTween = function(destination) {
         return this.game.physics.arcade.distanceBetween(this, destination) * (100 / this.speed);
     };
+    
     Unit.prototype.getPersonalInfo = function getPersonalInfo() {
         var info = parent.prototype.getPersonalInfo.call(this);
         info.health = this.health;
@@ -109,6 +113,7 @@ var Unit = (function iife(parent) {
         info.infoType = 'unit';
         return info;
     };
+    
     Unit.prototype.showPersonalInfo = function showPersonalInfo() {
         console.log(this.getPersonalInfo())
     };

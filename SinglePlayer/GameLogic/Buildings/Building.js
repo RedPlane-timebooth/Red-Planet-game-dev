@@ -7,6 +7,7 @@ var Building = (function iife(parent) {
         this.game.buildings.add(this);
         this.playerId =  player.id;
         this.inputEnabled = true;
+        this.fullyBuild = false;
     }
 
     Building.prototype = Object.create(parent.prototype);

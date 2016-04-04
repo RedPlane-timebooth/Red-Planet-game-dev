@@ -2,10 +2,11 @@ var BulletsPoolFactory = (function iife(parent) {
     'use strict';
 
     const BulletCount = 100;
-    const simpleBullet = {
-        spriteName: 'bullet',
-        bulletSpeed: 1000,
-        tracking: true
+    const turretMissile = {
+        spriteName: 'missile',
+        bulletSpeed: 500,
+        tracking: true,
+        explosionType: 'missileExplosion'
     };
 
     /**
@@ -35,7 +36,8 @@ var BulletsPoolFactory = (function iife(parent) {
         switch (bulletType) {
             case BULLET_TYPES.BULLET:
                 this.getFirstExists(false).init(sourceX, sourceY, target,
-                    simpleBullet.spriteName, simpleBullet.bulletSpeed, damage, simpleBullet.tracking);
+                    turretMissile.spriteName, turretMissile.bulletSpeed, damage, turretMissile.tracking,
+                    turretMissile.explosionType);
         }
     };
 

@@ -29,7 +29,7 @@ var Bullet = (function iife(parent) {
      * @param damage
      * @param tracking
      */
-    Bullet.prototype.init = function fire(x, y, target, spriteName, speed, damage, tracking) {
+    Bullet.prototype.init = function fire(x, y, target, spriteName, speed, damage, tracking, explosionType) {
         validator.validateIfNumber(x, spriteName + ' x');
         validator.validateIfNumber(y, spriteName + ' y');
         validator.validateIfString(spriteName, spriteName + ' spriteName');
@@ -37,15 +37,18 @@ var Bullet = (function iife(parent) {
         validator.validateIfNumber(damage, spriteName + ' damage');
         validator.validateIfBool(tracking, spriteName + ' tracking');
 
-        this.reset(x, y);
-        this.key = spriteName;
-        this.loadTexture(spriteName, 0);
-        this.damage = damage;
-        this.tracking = tracking;
+        if(target){
+            this.reset(x, y);
+            this.key = spriteName;
+            this.loadTexture(spriteName, 0);
+            this.damage = damage;
+            this.tracking = tracking;
 
-        this.rotation = parseFloat(this.game.physics.arcade.angleToXY(this, target.x, target.y)) * 180 / Math.PI;
-        this.game.physics.arcade.velocityFromAngle(this.rotation, speed, this.body.velocity);
-        this.game.physics.arcade.moveToObject(this, target, speed);
+            this.rotation = this.game.physics.arcade.angleBetween(this, target);
+            this.game.physics.arcade.velocityFromAngle(this.rotation, speed, this.body.velocity);
+            this.game.physics.arcade.moveToObject(this, target, speed);
+            this.explosionType = explosionType;
+        }
     };
 
     return Bullet;

@@ -5,7 +5,7 @@ var Turret = (function iife(parent) {
     const START_FRAME = 0;
     const MONEY_COST = 80;
     const FIRE_DAMAGE = 20;
-    const FIRE_SPEED = 1000;
+    const FIRE_SPEED = 2000;
     const SCALE = 1;
     const RANGE = 100;
     const BULLET_TYPE = BULLET_TYPES.BULLET;
@@ -48,6 +48,15 @@ var Turret = (function iife(parent) {
     Turret.prototype.constructor = Turret;
 
     Turret.prototype.MONEY_COST = MONEY_COST;
+
+    Turret.prototype.fire = function fire() {
+        this.game.missileShoot = this.game.add.audio('missileShoot');
+        this.game.missileShoot.play();
+        parent.prototype.fire.call(this);
+        this.game.time.events.add(300, function(){
+            this.game.bullets.factory(this.x - 10, this.y - 30, this.nextTarget, this.bulletType, this.fireDamage);
+        }, this);
+    };
 
     return Turret;
 }(Tower));
