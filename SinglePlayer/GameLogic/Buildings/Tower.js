@@ -51,9 +51,11 @@ var Tower = (function iife(parent) {
         }
     };
     Tower.prototype.onUpdate = function onUpdate() {
-        this.findTarget();
-        if(this.nextTarget){
-            this.fire();
+        if(this.fullyBuild){
+            this.findTarget();
+            if(this.nextTarget){
+                this.fire();
+            }
         }
     };
     Tower.prototype.getPersonalInfo = function getPersonalInfo() {

@@ -62,7 +62,7 @@ var Unit = (function iife(parent) {
         this.walked = 0;
         this.body.setSize(32, 32);
 
-        //define unit movement based on checkpoints with Phaser tween system ( I prefer events over watchers )
+        //define unit movement based on checkpoints with Phaser tween system ( I prefer events and promises over watchers )
         var currentCheckPoint = 0,
             _this = this;
         this.tweens = [];

@@ -37,7 +37,7 @@ RedPlanetGame.Game = (function iife() {
             setInterval(function () {
                 _this.game.enemies.factory(_this.spawnCreepsAt.x, _this.spawnCreepsAt.y + creepYOffset, 
                     UNIT_TYPES.CREEP1, _this.checkPoints);
-            }, 3000);
+            }, 1000);
 
 
             this.game.canBuild = false; 
@@ -146,7 +146,7 @@ RedPlanetGame.Game = (function iife() {
             this.ui.turret.inputEnabled = true;
             this.ui.turret.events.onInputDown.add(onClickButtonTower1, this);
             function onClickButtonTower1() {
-                this.game.cursorType = CURSOR_TYPE.TURRET;
+                _this.game.cursorType = CURSOR_TYPE.TURRET;
                 _this.game.buildState = true;
                 _this.game.canBuild = false;
                 _this.game.time.events.add(1000, function () {
@@ -190,8 +190,8 @@ RedPlanetGame.Game = (function iife() {
             if (this.game.input.activePointer.leftButton.isDown && this.game.canBuild && !buffers.pressed.is) {//yo Yoda
                 switch (this.game.cursorType){
                     case CURSOR_TYPE.TURRET:
-                        xOffset = 22;
-                        yOffset = 31;
+                        xOffset = 22 + this.game.camera.x;
+                        yOffset = 31 + this.game.camera.y;
                         buildingType = BUILDING_TYPES.TURRET;
                         break;
                     default:
