@@ -28,8 +28,11 @@ var Bullet = (function iife(parent) {
      * @param speed
      * @param damage
      * @param tracking
+     * @param explosionType
+     * @param explosionSound
      */
-    Bullet.prototype.init = function fire(x, y, target, spriteName, speed, damage, tracking, explosionType) {
+    Bullet.prototype.init = function fire(x, y, target, spriteName, speed, damage, tracking,
+                                          explosionType, explosionSound) {
         validator.validateIfNumber(x, spriteName + ' x');
         validator.validateIfNumber(y, spriteName + ' y');
         validator.validateIfString(spriteName, spriteName + ' spriteName');
@@ -48,8 +51,25 @@ var Bullet = (function iife(parent) {
             this.game.physics.arcade.velocityFromAngle(this.rotation, speed, this.body.velocity);
             this.game.physics.arcade.moveToObject(this, target, speed);
             this.explosionType = explosionType;
+            this.explosionSound = this.game.add.audio(explosionSound);
         }
     };
 
+    Bullet.prototype.kill = function kill(enemy) {
+        parent.prototype.kill.call(this);
+        this.game.time.events.add(100, function(){
+            this.explosionSound.play();
+        }, this);
+
+        if(enemy){
+            //TODO: refactor to explosion pool
+            var explosion = new WorldObject(this.game, enemy.x, enemy.y, this.explosionType);
+            explosion.animations.add('explode');
+            explosion.animations.play('explode', 25, false).onComplete.add(function() {
+                explosion.destroy();
+            });
+        }
+    };
+    
     return Bullet;
 }(WorldObject));

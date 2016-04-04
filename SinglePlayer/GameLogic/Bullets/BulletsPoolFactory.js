@@ -6,7 +6,8 @@ var BulletsPoolFactory = (function iife(parent) {
         spriteName: 'missile',
         bulletSpeed: 500,
         tracking: true,
-        explosionType: 'missileExplosion'
+        explosionType: 'missileExplosion',
+        explosionSound: 'missileExplosion'
     };
 
     /**
@@ -37,7 +38,7 @@ var BulletsPoolFactory = (function iife(parent) {
             case BULLET_TYPES.BULLET:
                 this.getFirstExists(false).init(sourceX, sourceY, target,
                     turretMissile.spriteName, turretMissile.bulletSpeed, damage, turretMissile.tracking,
-                    turretMissile.explosionType);
+                    turretMissile.explosionType, turretMissile.explosionSound);
         }
     };
 

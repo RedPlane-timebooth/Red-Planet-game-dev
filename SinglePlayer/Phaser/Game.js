@@ -79,17 +79,7 @@ RedPlanetGame.Game = (function iife() {
         //checks for collision between bullets and enemies
         this.game.physics.arcade.overlap(this.game.bullets, this.game.enemies, function (bullet, enemy) {
             enemy.takeHit(bullet, _this.game.player);
-            //TODO: refactor to explosion pool
-            var explosion = new WorldObject(_this.game, enemy.x, enemy.y, bullet.explosionType);
-            explosion.animations.add('explode');
-            explosion.animations.play('explode', 25, false).onComplete.add(function() {
-                explosion.destroy();
-            });
-            _this.game.time.events.add(100, function(){
-                _this.game.missileExplosion = _this.game.add.audio('missileExplosion');
-                _this.game.missileExplosion.play();
-            }, _this);
-            bullet.kill();
+            bullet.kill(enemy);
         }, null, this);
 
         //updates enemies
