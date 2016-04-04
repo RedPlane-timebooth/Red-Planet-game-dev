@@ -2,8 +2,8 @@ var Tower = (function iife(parent) {
     'use strict';
     var nextTarget = null;
 
-    function Tower(game, x, y, spriteName, player, bulletType, fireDamage, fireSpeed, scale, range) {
-        parent.call(this, game, x, y, spriteName, player);
+    function Tower(game, x, y, spriteName, startFrame, player, bulletType, fireDamage, fireSpeed, scale, range) {
+        parent.call(this, game, x, y, spriteName, startFrame, player);
 
         validator.validateIfString(bulletType, this.constructor + ' bulletType');
         validator.validateIfNumber(fireDamage, this.constructor + ' fireDamage');
@@ -25,15 +25,6 @@ var Tower = (function iife(parent) {
                 is: false
             }
         };
-        
-        //draws circle around the tower when build for now TODO: move this when clicked on tower and when in build state
-        var circles = this.game.add.graphics(this.x, this.y);
-        circles.lineStyle(1, 0xff0000);
-        circles.drawCircle(0, 0, this.range * 2);
-
-        this.inputEnabled = true;
-        var _this = this;
-        this.events.onInputDown.add(_this.showPersonalInfo, this);
     }
 
     Tower.prototype = Object.create(parent.prototype);
@@ -75,6 +66,14 @@ var Tower = (function iife(parent) {
     };
     Tower.prototype.showPersonalInfo = function showPersonalInfo() {
         console.log(this.getPersonalInfo())
+        this.circles = this.game.add.graphics(this.x, this.y);
+        this.circles.lineStyle(1, 0xff0000);
+        this.circles.drawCircle(0, 0, this.range * 2);
+    };
+    Tower.prototype.hidePersonalInfo = function showPersonalInfo() {
+        if(this.circles){
+            this.circles.destroy();
+        }
     };
 
     return Tower;

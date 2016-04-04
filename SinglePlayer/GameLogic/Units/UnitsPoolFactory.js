@@ -4,6 +4,7 @@ var UnitsPoolFactory = (function iife(parent) {
     const UnitsCount = 100;
     const creep1 = {
         spriteName: 'creep1',
+        moveAnimationLength: 10,
         goldReward: 50,
         speed: 10,
         scale: 0.4,
@@ -33,7 +34,7 @@ var UnitsPoolFactory = (function iife(parent) {
         switch (unitType) {
             case UNIT_TYPES.CREEP1:
                 this.getFirstExists(false).init(x, y, checkPoints,
-                    creep1.spriteName, creep1.goldReward, creep1.speed, creep1.scale, creep1.health,
+                    creep1.spriteName, creep1.moveAnimationLength, creep1.goldReward, creep1.speed, creep1.scale, creep1.health,
                 creep1.defence, creep1.isAir);
         }
     };

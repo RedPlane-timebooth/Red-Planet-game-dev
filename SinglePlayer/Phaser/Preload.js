@@ -15,16 +15,15 @@ RedPlanetGame.Preload = (function iife() {
             this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'preloadBar');
             this.preloadBar.anchor.setTo(0.5);
 
-            this.load.image('tower1-button', '/assets/buildings/buttons/tower1-button.png');
             this.load.spritesheet('creep1', '/assets/creeps/creep1.png', 81, 80, 14, 0.5);
-            this.load.spritesheet('tower1', '/assets/buildings/towers/tower1.png', 240, 158, 16);
+            this.load.spritesheet('turret', '/assets/buildings/towers/turret/turret.png', 64, 64, 3);
+            this.load.spritesheet('turretUp', '/assets/buildings/towers/turret/turretUp.png', 64, 32, 17);
             this.load.image('bullet', '/assets/images/bullet.png');
             this.load.setPreloadSprite(this.preloadBar);
 
             //load game assets
             this.load.tilemap('sample2', '/assets/maps/sample2.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.image('gameTiles', '/assets/images/32x32_map_tile v3.1 [MARGINLESS].png');
-
         },
         create: function () {
             this.state.start('Game');

@@ -8,7 +8,7 @@
 // require('./GameLogic/Units/UnitsFactory');
 // require('./GameLogic/Buildings/Building');
 // require('./GameLogic/Buildings/Tower');
-// require('./GameLogic/Buildings/Tower1');
+// require('./GameLogic/Buildings/Turret');
 // require('./GameLogic/Buildings/BuildingsFactory');
 // require('./GameLogic/Player');
 // require('./GameLogic/Bullets/Bullet');

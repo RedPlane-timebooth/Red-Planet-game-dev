@@ -11,8 +11,8 @@ var BuildingsFactory = (function iife() {
      */
     function BuildingsFactory(game, x, y, player, building) {
         switch (building) {
-            case BUILDING_TYPES.TOWER1:
-                return new Tower1(game, x, y, player);
+            case BUILDING_TYPES.TURRET:
+                return new Turret(game, x, y, player);
         }
     }
 

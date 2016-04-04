@@ -2,10 +2,7 @@ var RedPlanetGame = RedPlanetGame || {};
 
 RedPlanetGame.Game = (function iife() {
     'use strict';
-    var canBuild = true,
-        buildState = false,
-        buildStateBuildingRed = true,
-        _this = null,
+    var _this = null,
         buffers = {
             pressed: {
                 is: false
@@ -30,7 +27,7 @@ RedPlanetGame.Game = (function iife() {
         create: function create() {
             //A door for multyplayer
             this.players = [];
-            this.player = new Player(1, 'Daniel', 300);
+            this.player = new Player(1, 'Daniel', 1000);
             this.players.push(this.player);
 
             this.initMapLayersGroups();
@@ -42,8 +39,40 @@ RedPlanetGame.Game = (function iife() {
                     UNIT_TYPES.CREEP1, _this.checkPoints);
             }, 3000);
 
+
+            this.game.canBuild = false; 
+            this.game.buildState = false;
+            this.game.invisiblePath.children.forEach(function(invisiblePath){
+                invisiblePath.inputEnabled = true;
+                invisiblePath.events.onInputOver.add(function(){
+                    if(_this.game.buildState){
+                        if(_this.game.cursorType = CURSOR_TYPE.TURRET){
+                            _this.game.cursorType = CURSOR_TYPE.TURRET_RED;
+                        }
+                        _this.game.canBuild = false;
+                    }
+                }, this);
+
+                invisiblePath.events.onInputOut.add(function(){
+                    if(_this.game.buildState){
+                        if(_this.game.cursorType = CURSOR_TYPE.TURRET_RED){
+                            _this.game.cursorType = CURSOR_TYPE.TURRET;
+                        }
+                        _this.game.canBuild = true;
+                    }
+                }, this);
+            });
+
+            this.game.cursorType = CURSOR_TYPE.NORMAL;
         },
         update: function update() {
+            this.game.canvas.style.cursor = this.game.cursorType;
+
+            //on building state
+            if (this.game.buildState) {
+                this.onBuildState();
+            }
+
             this.followCamera();
             //check for collision between enemy and non-path layer
             this.game.physics.arcade.collide(this.game.enemies, this.backgroundlayer);
@@ -52,6 +81,7 @@ RedPlanetGame.Game = (function iife() {
                 enemy.takeHit(bullet, _this.player);
                 bullet.kill();
             }, null, this);
+
             //updates enemies
             this.game.enemies.forEachExists(function (enemy) {
                 enemy.onUpdate(_this.map.objects['objectsLayer'][6]);
@@ -60,10 +90,7 @@ RedPlanetGame.Game = (function iife() {
             this.game.buildings.forEach(function (building) {
                 building.onUpdate(_this.game.bullets);
             });
-            //on building state
-            if (buildState) {
-                this.onBuildState();
-            }
+
             //updates (static) position of UI
             this.updateUI(this.game.camera.x, this.game.camera.y);
         },
@@ -97,6 +124,7 @@ RedPlanetGame.Game = (function iife() {
             this.game.physics.enable(this.game.invisiblePath, Phaser.Physics.ARCADE);
             //creates checkPoints for creeps
             this.checkPoints = createCheckPoints('checkPoint', this.map, 'objectsLayer');
+
         },
         initUI: function initUI() {
             this.ui = {};
@@ -113,41 +141,40 @@ RedPlanetGame.Game = (function iife() {
                 {font: "24px Arial", fill: '#ff00ff'}
             );
 
-            var scaleTower1 = 0.5;
-            this.ui.tower1 = this.game.add.sprite(300, 500, 'tower1-button');
-            this.ui.tower1.scale.setTo(0.3);
-            this.ui.tower1.inputEnabled = true;
-            this.ui.tower1.events.onInputDown.add(onClickButtonTower1, this);
+            this.ui.turret = new WorldObject(_this.game, 0, 0, 'turret', 0);
+            this.ui.turret.scale.setTo(0.5);
+            this.ui.turret.inputEnabled = true;
+            this.ui.turret.events.onInputDown.add(onClickButtonTower1, this);
             function onClickButtonTower1() {
-                this.currentBuilding = new WorldObject(_this.game, _this.game.input.x - 50, _this.game.input.y - 50, 'tower1', 0);
-                this.currentBuilding.scale.setTo(scaleTower1);
-                this.currentBuilding.anchor.setTo(scaleTower1);
-                this.currentBuilding.alpha = 0.8;
-                this.game.time.events.add(100, function () {
-                    buildState = true
+                this.game.cursorType = CURSOR_TYPE.TURRET;
+                _this.game.buildState = true;
+                _this.game.canBuild = false;
+                _this.game.time.events.add(1000, function () {
+                    _this.game.canBuild = true
                 }, this);
             }
-
-            this.ui.tower1.events.onInputOver.add(function () {
-                this.game.canvas.style.cursor = "pointer";
+            this.ui.turret.events.onInputOver.add(function () {
+                //this.game.cursorType = CURSOR_TYPE.POINTER;
             }, this);
 
-            this.ui.tower1.events.onInputOut.add(function () {
-                this.game.canvas.style.cursor = "default";
+            this.ui.turret.events.onInputOut.add(function () {
+                //this.game.cursorType = CURSOR_TYPE.NORMAL;
             }, this);
         },
         updateUI: function updateUI(xOffset, yOffset) {
-            this.ui.tower1.x = 300 + xOffset;
-            this.ui.tower1.y = 500 + yOffset;
+            this.ui.turret.x = 300 + xOffset;
+            this.ui.turret.y = 500 + yOffset;
             this.ui.gold.x = 150 + xOffset;
             this.ui.gold.y = 0 + yOffset;
+            this.ui.killed.x = 300 + xOffset;
+            this.ui.killed.y = 0 + yOffset;
         },
         followCamera: function followCamera() {
             //Camera follow cursor
             if (this.game.input.mousePointer.x > gameHeight - gameHeight / 10) {
                 this.game.camera.x += 10;
             } else if (this.game.input.mousePointer.x <= 100) {
-                this.game.camera.x -= 10;
+                this.game.camera.x -= 10
             }
             if (this.game.input.mousePointer.y > gameWidth - gameWidth / 10) {
                 this.game.camera.y += 10;
@@ -156,54 +183,38 @@ RedPlanetGame.Game = (function iife() {
             }
         },
         onBuildState: function onBuildState() {
-            //hides cursor
-            this.game.canvas.style.cursor = "none";
-            //new building sprite follows cursor
-            this.game.physics.arcade.moveToPointer(this.currentBuilding, 1500);
-
-            //if tower overlaps
-            if (Phaser.Rectangle.contains(this.currentBuilding.body, this.game.input.x, this.game.input.y)) {
-                this.currentBuilding.body.velocity.setTo(0);
-            }
-
-            //bool for default building tint
-            buildStateBuildingRed = false;
-
-            //checks if buildings overlap over non-buildable and sets buildStateBuildingRed = true and canBuild = false
-            this.game.physics.arcade.overlap(this.currentBuilding, this.game.invisiblePath,
-                this.onBuildingOverlap, null, this);
-            this.game.physics.arcade.overlap(this.currentBuilding, this.game.buildings,
-                this.onBuildingOverlap, null, this);
-
-            //sets the proper tint
-            this.currentBuilding.tint = buildStateBuildingRed ? 0xff0000 : 0xffffff;
-
             //on mouse down event
-            if (this.game.input.activePointer.leftButton.isDown && canBuild && !buffers.pressed.is) {//yo Yoda
-                //builds new building of type TOWER1
-                buffer(buffers.pressed, 1000, this.game);
-                if (Building.prototype.canBuild(this.player.gold, Tower1.prototype.MONEY_COST)) {
+            var xOffset,
+                yOffset,
+                buildingType;
+            if (this.game.input.activePointer.leftButton.isDown && this.game.canBuild && !buffers.pressed.is) {//yo Yoda
+                switch (this.game.cursorType){
+                    case CURSOR_TYPE.TURRET:
+                        xOffset = 22;
+                        yOffset = 31;
+                        buildingType = BUILDING_TYPES.TURRET;
+                        break;
+                    default:
+                        break;
+                }
+                if (Building.prototype.canBuild(this.player.gold, Turret.prototype.MONEY_COST)) {
                     BuildingsFactory(
                         this.game,
-                        this.currentBuilding.x,
-                        this.currentBuilding.y,
-                        this.player, BUILDING_TYPES.TOWER1
+                        this.game.input.x + xOffset,
+                        this.game.input.y + yOffset,
+                        this.player,
+                        buildingType
                     );
-                    this.player.gold -= Tower1.prototype.MONEY_COST;
+                    this.player.gold -= Turret.prototype.MONEY_COST;
                 } else {
                     alert('Not enought gold');
                 }
 
-                buildState = false;
-                this.currentBuilding.destroy();
-                this.game.canvas.style.cursor = "default";
+                this.game.buildState = false;
+                this.game.canBuild = false;
+                this.game.cursorType = CURSOR_TYPE.NORMAL;
+                buffer(buffers.pressed, 400, this.game);
             }
-
-            canBuild = true;
-        },
-        onBuildingOverlap: function onBuildingOverlap() {
-            canBuild = false;
-            buildStateBuildingRed = true;
         }
     };
 

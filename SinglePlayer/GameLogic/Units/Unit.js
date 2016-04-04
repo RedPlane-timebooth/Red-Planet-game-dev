@@ -28,6 +28,7 @@ var Unit = (function iife(parent) {
      * @param y
      * @param checkPoints
      * @param spriteName
+     * @param moveAnimationLength
      * @param goldReward
      * @param speed
      * @param scale
@@ -35,10 +36,11 @@ var Unit = (function iife(parent) {
      * @param defence
      * @param isAir
      */
-    Unit.prototype.init = function init(x, y, checkPoints, spriteName, goldReward, speed, scale, health, defence, isAir) {
+    Unit.prototype.init = function init(x, y, checkPoints, spriteName, moveAnimationLength, goldReward, speed, scale, health, defence, isAir) {
         validator.validateIfNumber(x, spriteName + ' x');
         validator.validateIfNumber(y, spriteName + ' y');
-        validator.validateIfString(spriteName, spriteName + ' spriteName');
+        validator.validateIfNumber(moveAnimationLength, spriteName + ' moveAnimationLength');
+        validator.validateIfNumber(speed, spriteName + ' speed');
         validator.validateIfNumber(goldReward, spriteName + ' goldReward');
         validator.validateIfNumber(speed, spriteName + ' speed');
         validator.validateIfNumber(scale, spriteName + ' scale');
