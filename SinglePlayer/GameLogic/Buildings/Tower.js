@@ -33,7 +33,6 @@ var Tower = (function iife(parent) {
     Tower.prototype.fire = function fire() {
         this.game.bullets.factory(this.x, this.y - 30, this.nextTarget, this.bulletType, this.fireDamage);
     };
-
     Tower.prototype.findTarget = function findTarget() {
         if (!this.buffers.searchedForTarget.is) {
             nextTarget = null;
@@ -48,7 +47,6 @@ var Tower = (function iife(parent) {
             buffer(this.buffers.searchedForTarget, 250, this.game);
         }
     };
-
     Tower.prototype.onUpdate = function onUpdate() {
         if (this.fullyBuild) {
             this.findTarget();
@@ -58,7 +56,6 @@ var Tower = (function iife(parent) {
             }
         }
     };
-
     Tower.prototype.getPersonalInfo = function getPersonalInfo() {
         var info = parent.prototype.getPersonalInfo.call(this);
         info.damage = this.fireDamage;
@@ -68,17 +65,15 @@ var Tower = (function iife(parent) {
         return info;
     };
 
-    Tower.prototype.showPersonalInfo = function showPersonalInfo() {
-        console.log(this.getPersonalInfo())
-        this.circles = this.game.add.graphics(this.x, this.y);
-        this.circles.lineStyle(1, 0xff0000);
-        this.circles.drawCircle(0, 0, this.range * 2);
-    };
-
-    Tower.prototype.hidePersonalInfo = function showPersonalInfo() {
-        if (this.circles) {
-            this.circles.destroy();
-        }
+    Tower.prototype.showDialog = function showPersonalInfo() {
+        parent.prototype.showDialog.call(this);
+        
+        this.game.circle = this.game.add.graphics(this.x, this.y);
+        this.game.circle.lineStyle(1, 0xff0000);
+        this.game.circle.drawCircle(0, 0, this.range * 2);
+        this.game.time.events.add(500, function(){
+                this.game.canDestroyCircle = true;
+        }, this);
     };
 
     return Tower;

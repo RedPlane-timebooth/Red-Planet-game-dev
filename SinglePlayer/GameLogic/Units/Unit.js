@@ -15,8 +15,17 @@ var Unit = (function iife(parent) {
         this.exists = false;
         
         this.inputEnabled = true;
-        var _this = this;
-        this.events.onInputDown.add(_this.showPersonalInfo, this);
+        this.events.onInputDown.add(this.showDialog, this);
+        this.events.onInputOver.add(function() {
+            if(!this.game.buildState) {
+                this.game.cursorType = CURSOR_TYPE.POINTER;
+            }
+        }, this);
+        this.events.onInputOut.add(function() {
+            if(!this.game.buildState) {
+                this.game.cursorType = CURSOR_TYPE.NORMAL;
+            }
+        }, this);
     }
 
     Unit.prototype = Object.create(parent.prototype);
@@ -89,22 +98,18 @@ var Unit = (function iife(parent) {
             player.killed += 1;
         }
     };
-    
     Unit.prototype.onUpdate = function onUpdate() {
         this.walked++;
     };
-    
     Unit.prototype.kill = function kill() {
         parent.prototype.kill.call(this);
         this.tweens.forEach(function(tween){
             tween.stop();
         });
     };
-    
     Unit.prototype.calculateTimeForTween = function(destination) {
         return this.game.physics.arcade.distanceBetween(this, destination) * (100 / this.speed);
     };
-    
     Unit.prototype.getPersonalInfo = function getPersonalInfo() {
         var info = parent.prototype.getPersonalInfo.call(this);
         info.health = this.health;
@@ -113,9 +118,8 @@ var Unit = (function iife(parent) {
         info.infoType = 'unit';
         return info;
     };
-    
-    Unit.prototype.showPersonalInfo = function showPersonalInfo() {
-        console.log(this.getPersonalInfo())
+    Unit.prototype.showDialog = function showPersonalInfo() {
+        parent.prototype.showDialog.call(this);
     };
 
     return Unit;

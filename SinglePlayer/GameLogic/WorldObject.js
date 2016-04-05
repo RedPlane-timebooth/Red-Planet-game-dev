@@ -34,6 +34,12 @@ var WorldObject = (function iife(parent) {
             spriteKey: this.key
         }
     };
-    
+    WorldObject.prototype.showDialog = function showPersonalInfo() {
+        console.log(this.getPersonalInfo());
+    };
+    WorldObject.prototype.hideDialog = function showPersonalInfo() {
+        console.log("Not implemented");
+    };
+
     return WorldObject;
 }(Phaser.Sprite));

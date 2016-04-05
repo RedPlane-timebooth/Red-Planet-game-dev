@@ -12,6 +12,9 @@ RedPlanetGame.Game = (function iife() {
             },
             movedToPointer: {
                 is: false
+            },
+            towerCircleDestroyed: {
+                is: false
             }
         };
 
@@ -63,6 +66,7 @@ RedPlanetGame.Game = (function iife() {
         });
 
         this.game.cursorType = CURSOR_TYPE.NORMAL;
+        this.game.canDestroyCircle = false;
     };
 
     RedPlanetGame.Game.prototype.update = function update() {
@@ -71,6 +75,18 @@ RedPlanetGame.Game = (function iife() {
         //on building state
         if (this.game.buildState) {
             this.onBuildState();
+        }
+
+        //Removes range cricle around tower when clicked somewhere else
+        if (this.game.input.activePointer.isDown){
+            if (this.game.circle && !buffers.towerCircleDestroyed.is) {
+                if(this.game.canDestroyCircle){
+                    this.game.circle.destroy();
+                    this.game.circle = null;
+                    this.game.canDestroyCircle = false;
+                }
+                buffer(buffers.towerCircleDestroyed, 100, this.game);
+            }
         }
 
         this.followCamera();

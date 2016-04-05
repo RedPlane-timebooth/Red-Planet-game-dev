@@ -8,6 +8,13 @@ var Building = (function iife(parent) {
         this.playerId =  player.id;
         this.inputEnabled = true;
         this.fullyBuild = false;
+
+        this.invisibleChild = this.game.add.sprite(this.x - this.width, this.y - this.height, 'turret', 0);
+        this.invisibleChild.inputEnabled = true;
+        this.invisibleChild.alpha = 0.0;
+        this.invisibleChild.events.onInputOver.add(this.onBuildingOver, this);
+        this.invisibleChild.events.onInputOut.add(this.onBuildingOut, this);
+        this.invisibleChild.events.onInputDown.add(this.showDialog, this);
     }
 
     Building.prototype = Object.create(parent.prototype);
@@ -35,6 +42,9 @@ var Building = (function iife(parent) {
         } else {
             this.game.cursorType = CURSOR_TYPE.NORMAL;
         }
+    };
+    Building.prototype.showDialog = function showDialog() {
+        parent.prototype.showDialog.call(this);
     };
     
     return Building;

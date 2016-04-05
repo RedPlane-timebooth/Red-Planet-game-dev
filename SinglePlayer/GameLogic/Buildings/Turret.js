@@ -32,16 +32,6 @@ var Turret = (function iife(parent) {
             this.animations.add('build', [1, 2], 1, false);
             this.animations.play('build');
         }, this);
-
-        x = this.x - 54;
-        y = this.y - 54;
-        
-        this.invisibleChild = this.game.add.sprite(x, y, 'turret', 0);
-        this.invisibleChild.inputEnabled = true;
-        this.invisibleChild.alpha = 0.0;
-        this.invisibleChild.events.onInputOver.add(this.onBuildingOver, this);
-        this.invisibleChild.events.onInputOut.add(this.onBuildingOut, this);
-        this.invisibleChild.events.onInputDown.add(this.showPersonalInfo, this);
     }
 
     Turret.prototype = Object.create(parent.prototype);
