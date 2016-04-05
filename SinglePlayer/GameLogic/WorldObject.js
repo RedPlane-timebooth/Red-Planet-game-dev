@@ -37,9 +37,6 @@ var WorldObject = (function iife(parent) {
     WorldObject.prototype.showDialog = function showPersonalInfo() {
         console.log(this.getPersonalInfo());
     };
-    WorldObject.prototype.hideDialog = function showPersonalInfo() {
-        console.log("Not implemented");
-    };
 
     return WorldObject;
 }(Phaser.Sprite));

@@ -6,10 +6,10 @@ var Tower = (function iife(parent) {
         parent.call(this, game, x, y, spriteName, startFrame, player);
 
         validator.validateIfString(bulletType, this.constructor + ' bulletType');
-        validator.validateIfNumber(fireDamage, this.constructor + ' fireDamage');
-        validator.validateIfNumber(fireSpeed, this.constructor + ' fireSpeed');
+        validator.validateIfUndefined(fireDamage, this.constructor + ' fireDamage');
+        validator.validateIfUndefined(fireSpeed, this.constructor + ' fireSpeed');
         validator.validateIfNumber(scale, this.constructor + ' scale');
-        validator.validateIfNumber(range, this.constructor + ' range');
+        validator.validateIfUndefined(range, this.constructor + ' range');
 
         this.bulletType = bulletType;
         this.fireDamage = fireDamage;
@@ -25,19 +25,26 @@ var Tower = (function iife(parent) {
                 is: false
             }
         };
+
+        this.upgrades = {
+            fireSpeed : 0,
+            fireDamage : 0,
+            range : 0
+        }
     }
 
     Tower.prototype = Object.create(parent.prototype);
     Tower.prototype.constructor = Tower;
 
     Tower.prototype.fire = function fire() {
-        this.game.bullets.factory(this.x, this.y - 30, this.nextTarget, this.bulletType, this.fireDamage);
+        this.game.bullets.factory(this.x, this.y - 30, this.nextTarget, this.bulletType,
+            this.fireDamage[this.upgrades.fireDamage]);
     };
     Tower.prototype.findTarget = function findTarget() {
         if (!this.buffers.searchedForTarget.is) {
             nextTarget = null;
             this.game.enemies.forEachExists(function (enemy) {
-                if (this.game.physics.arcade.distanceBetween(this, enemy) < this.range) {
+                if (this.game.physics.arcade.distanceBetween(this, enemy) < this.range[this.upgrades.range]) {
                     if (nextTarget === null || nextTarget.walked < enemy.walked) {
                         nextTarget = enemy;
                     }
@@ -52,7 +59,7 @@ var Tower = (function iife(parent) {
             this.findTarget();
             if (this.nextTarget && !this.buffers.fired.is) {
                 this.fire();
-                buffer(this.buffers.fired, this.fireSpeed, this.game);
+                buffer(this.buffers.fired, this.fireSpeed[this.upgrades.fireSpeed], this.game);
             }
         }
     };
@@ -64,17 +71,27 @@ var Tower = (function iife(parent) {
         info.infoType = 'tower';
         return info;
     };
-
     Tower.prototype.showDialog = function showPersonalInfo() {
         parent.prototype.showDialog.call(this);
-        
-        this.game.circle = this.game.add.graphics(this.x, this.y);
-        this.game.circle.lineStyle(1, 0xff0000);
-        this.game.circle.drawCircle(0, 0, this.range * 2);
-        this.game.time.events.add(500, function(){
-                this.game.canDestroyCircle = true;
-        }, this);
-    };
 
+        if(this.game.circle == null){
+            this.game.circle = this.game.add.graphics(this.x, this.y);
+            for (var i = 0; i < this.range[this.upgrades.range] * 2; i++) {
+                this.game.circle.lineStyle(1, 0xd3d3d3);
+                this.game.circle.lineAlpha = (i / 1000);
+                this.game.circle.drawCircle(0, 0, i);
+            }
+            this.game.time.events.add(500, function(){
+                this.game.canDestroyCircle = true;
+            }, this);
+        }
+    };
+    Tower.prototype.upgrade = function upgrade(type) {
+        if(this.upgrades[type] < 4){
+            this.upgrades[type]++;
+        } else {
+            console.log('Cant upgrade');
+        }
+    };
     return Tower;
 }(Building));

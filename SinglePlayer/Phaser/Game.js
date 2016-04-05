@@ -146,49 +146,51 @@ RedPlanetGame.Game = (function iife() {
     };
 
     RedPlanetGame.Game.prototype.initUI = function initUI() {
-        this.ui = {};
-        //text and player info
-        var textX = 150;
-        var textY = 0;
-        this.ui.gold = this.game.add.text(textX, textY, 'gold: ' + this.game.player.gold,
-            {font: "24px Arial", fill: '#FFD700'}
-        );
-
-        textX = 300;
-        textY = 0;
-        this.ui.killed = this.game.add.text(textX, textY, 'killed: ' + this.game.player.gold,
-            {font: "24px Arial", fill: '#ff00ff'}
-        );
-
-        this.ui.turret = new WorldObject(_this.game, 0, 0, 'turret', 0);
-        this.ui.turret.scale.setTo(0.5);
-        this.ui.turret.inputEnabled = true;
-        this.ui.turret.events.onInputDown.add(onClickButtonTower1, this);
-        function onClickButtonTower1() {
-            _this.game.cursorType = CURSOR_TYPE.TURRET;
-            _this.game.buildState = true;
-            _this.game.canBuild = false;
-            _this.game.time.events.add(1000, function () {
-                _this.game.canBuild = true
-            }, this);
-        }
-
-        this.ui.turret.events.onInputOver.add(function () {
-            this.game.cursorType = CURSOR_TYPE.POINTER;
-        }, this);
-
-        this.ui.turret.events.onInputOut.add(function () {
-            this.game.cursorType = CURSOR_TYPE.NORMAL;
-        }, this);
+        // this.ui = {};
+        // //text and player info
+        // var textX = 150;
+        // var textY = 0;
+        // this.ui.gold = this.game.add.text(textX, textY, 'gold: ' + this.game.player.gold,
+        //     {font: "24px Arial", fill: '#FFD700'}
+        // );
+        //
+        // textX = 300;
+        // textY = 0;
+        // this.ui.killed = this.game.add.text(textX, textY, 'killed: ' + this.game.player.gold,
+        //     {font: "24px Arial", fill: '#ff00ff'}
+        // );
+        //
+        // this.ui.turret = new WorldObject(_this.game, 0, 0, 'turret', 0);
+        // this.ui.turret.scale.setTo(0.5);
+        // this.ui.turret.inputEnabled = true;
+        // this.ui.turret.events.onInputDown.add(onClickButtonTower1, this);
+        // function onClickButtonTower1() {
+        //     _this.game.cursorType = CURSOR_TYPE.TURRET;
+        //     _this.game.buildState = true;
+        //     _this.game.canBuild = false;
+        //     _this.game.time.events.add(1000, function () {
+        //         _this.game.canBuild = true
+        //     }, this);
+        // }
+        //
+        // this.ui.turret.events.onInputOver.add(function () {
+        //     this.game.cursorType = CURSOR_TYPE.POINTER;
+        // }, this);
+        //
+        // this.ui.turret.events.onInputOut.add(function () {
+        //     this.game.cursorType = CURSOR_TYPE.NORMAL;
+        // }, this);
+        this.ui = new UserInterface(this.game);
     };
 
     RedPlanetGame.Game.prototype.updateUI = function updateUI(xOffset, yOffset) {
-        this.ui.turret.x = 300 + xOffset;
-        this.ui.turret.y = 500 + yOffset;
-        this.ui.gold.x = 150 + xOffset;
-        this.ui.gold.y = 0 + yOffset;
-        this.ui.killed.x = 300 + xOffset;
-        this.ui.killed.y = 0 + yOffset;
+        // this.ui.turret.x = 300 + xOffset;
+        // this.ui.turret.y = 500 + yOffset;
+        // this.ui.gold.x = 150 + xOffset;
+        // this.ui.gold.y = 0 + yOffset;
+        // this.ui.killed.x = 300 + xOffset;
+        // this.ui.killed.y = 0 + yOffset;
+        this.ui.update(xOffset, yOffset);
     };
 
     RedPlanetGame.Game.prototype.followCamera = function followCamera() {

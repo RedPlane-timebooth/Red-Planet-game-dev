@@ -4,12 +4,18 @@ var Turret = (function iife(parent) {
     const spriteSheetLevel1 = 'turret';
     const START_FRAME = 0;
     const MONEY_COST = 80;
-    const FIRE_DAMAGE = 20;
-    const FIRE_SPEED = 2000;
-    const SCALE = 1;
-    const RANGE = 100;
-    const BULLET_TYPE = BULLET_TYPES.BULLET;
+    const FIRE_DAMAGE = [
+        20, 40, 80, 160, 400
+    ];
+    const FIRE_SPEED = [
+        2500, 2300, 2000, 1600, 1200
+    ];
+    const RANGE = [
+        60, 70, 85, 100, 120
+    ];
     
+    const SCALE = 1;
+    const BULLET_TYPE = BULLET_TYPES.BULLET;
     
     function Turret(game, x, y, player) {
         parent.call(this, game, x, y, spriteSheetLevel1, START_FRAME, player, BULLET_TYPE, FIRE_DAMAGE, FIRE_SPEED, SCALE, RANGE);
@@ -44,9 +50,10 @@ var Turret = (function iife(parent) {
         this.game.missileShoot.play();
         parent.prototype.fire.call(this);
         this.game.time.events.add(300, function(){
-            this.game.bullets.factory(this.x - 10, this.y - 30, this.nextTarget, this.bulletType, this.fireDamage);
+            this.game.bullets.factory(this.x - 10, this.y - 30, this.nextTarget, this.bulletType,
+                this.fireDamage[this.upgrades.fireDamage]);
         }, this);
     };
-
+    
     return Turret;
 }(Tower));
