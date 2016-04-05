@@ -1,5 +1,8 @@
 var UserInterface = (function iife() {
     'use strict';
+    const DIALOG_X = 200;
+    const DIALOG_Y = 450;
+
     function UserInterface(game) {
         this.game = game;
         var _this = this;
@@ -18,10 +21,10 @@ var UserInterface = (function iife() {
         );
 
         //turret build
-        this.turretX = 300;
+        this.turretX = 100;
         this.turretY = 500;
         this.turret = new WorldObject(_this.game, 0, 0, 'turret', 0);
-        this.turret.scale.setTo(0.5);
+        this.turret.scale.setTo(0.7);
         this.turret.inputEnabled = true;
         this.turret.events.onInputDown.add(onClickButtonTower1, this);
         function onClickButtonTower1() {
@@ -43,12 +46,9 @@ var UserInterface = (function iife() {
 
         this.dialog = {};
         this.dialog.tower = {};
+        this.dialog.tower.show = false;
         this.dialog.unit = {};
-        this.dialog.tower.sprite = null;
-        this.dialog.tower.health = null;
-        this.dialog.tower.damage = null;
-        this.dialog.tower.range = null;
-        this.dialog.tower.fireDamage = null;
+        this.dialog.unit.show = false;
     }
 
     UserInterface.prototype.update = function update(xOffset, yOffset) {
@@ -58,9 +58,33 @@ var UserInterface = (function iife() {
         this.gold.y = this.goldY + yOffset;
         this.killed.x = this.killedX + xOffset;
         this.killed.y = this.killedY + yOffset;
+        if(this.dialog.tower.show){
+            this.dialog.tower.sprite.x = DIALOG_X + xOffset;
+            this.dialog.tower.sprite.y = DIALOG_Y + yOffset;
+            this.dialog.tower.damage.x = DIALOG_X + 100 + xOffset;
+            this.dialog.tower.damage.y = DIALOG_Y + yOffset;
+            this.dialog.tower.range.x = DIALOG_X + 100 + xOffset;
+            this.dialog.tower.range.y = DIALOG_Y + 40 + yOffset;
+            this.dialog.tower.speed.x = DIALOG_X + 100 + xOffset;
+            this.dialog.tower.speed.y = DIALOG_Y + 80 + yOffset;
+        }
+
     };
     UserInterface.prototype.showDialog = function showDialog(dialog){
-        this.dialog[dialog.type] = dialog;
+        this.dialog[dialog.infoType] = dialog;
+        if(dialog.infoType === 'tower'){
+            this.dialog.tower.show = true;
+            this.dialog.tower.sprite = this.game.add.sprite(DIALOG_X, DIALOG_Y, dialog.spriteKey, 0);
+            this.dialog.tower.damage = this.game.add.text(DIALOG_X + 100, DIALOG_Y, 'damage: ' + dialog.damage,
+                {font: "24px Arial", fill: '#ff00ff'}
+            );
+            this.dialog.tower.range = this.game.add.text(DIALOG_X + 100, DIALOG_Y + 40, 'range: ' + dialog.range,
+                {font: "24px Arial", fill: '#ff00ff'}
+            );
+            this.dialog.tower.speed = this.game.add.text(DIALOG_X + 100, DIALOG_Y + 80, 'speed: ' + dialog.fireSpeed + '/s',
+                {font: "24px Arial", fill: '#ff00ff'}
+            );
+        }
     };
 
     return UserInterface;

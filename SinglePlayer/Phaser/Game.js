@@ -16,9 +16,6 @@ RedPlanetGame.Game = (function iife() {
         this.buffers = {
             pressed: {
                 is: false
-            },
-            towerCircleDestroyed: {
-                is: false
             }
         };
         this.game.circleBuild = false;
@@ -28,7 +25,7 @@ RedPlanetGame.Game = (function iife() {
         this.players.push(this.game.player);
 
         this.initMapLayersGroups();
-        this.ui = new UserInterface(this.game);
+        this.game.ui = new UserInterface(this.game);
 
         const creepYOffset = 15;
         setInterval(function () {
@@ -73,11 +70,11 @@ RedPlanetGame.Game = (function iife() {
         }
 
         //Removes range cricle around tower when clicked somewhere else
-        if (this.game.input.activePointer.isDown){
+        if (this.game.input.activePointer.isDown) {
             if (this.game.circleBuild && !this.buffers.pressed.is) {
-                    this.game.circle.destroy();
-                    this.game.canDestroyCircle = false;
-                buffer(this.buffers.pressed, 100, this.game);
+                buffer(this.buffers.pressed, 90, this.game);
+                this.game.circle.destroy();
+                this.game.canDestroyCircle = false;
                 this.game.circleBuild = false;
             }
         }
@@ -101,12 +98,12 @@ RedPlanetGame.Game = (function iife() {
         });
 
         //updates (static) position of UI
-        this.ui.update(this.game.camera.x, this.game.camera.y);
+        this.game.ui.update(this.game.camera.x, this.game.camera.y);
     };
 
     RedPlanetGame.Game.prototype.render = function render() {
-        this.ui.gold.text = 'gold: ' + this.game.player.gold;
-        this.ui.killed.text = 'killed: ' + this.game.player.killed;
+        this.game.ui.gold.text = 'gold: ' + this.game.player.gold;
+        this.game.ui.killed.text = 'killed: ' + this.game.player.killed;
     };
 
     RedPlanetGame.Game.prototype.initMapLayersGroups = function init() {
@@ -135,20 +132,6 @@ RedPlanetGame.Game = (function iife() {
         this.game.physics.enable(this.game.invisiblePath, Phaser.Physics.ARCADE);
         //creates checkPoints for creeps
         this.checkPoints = createCheckPoints('checkPoint', this.map, 'objectsLayer');
-
-    };
-
-    RedPlanetGame.Game.prototype.initUI = function initUI() {
-        this.ui = new UserInterface(this.game);
-    };
-
-    RedPlanetGame.Game.prototype.updateUI = function updateUI(xOffset, yOffset) {
-        // this.ui.turret.x = 300 + xOffset;
-        // this.ui.turret.y = 500 + yOffset;
-        // this.ui.gold.x = 150 + xOffset;
-        // this.ui.gold.y = 0 + yOffset;
-        // this.ui.killed.x = 300 + xOffset;
-        // this.ui.killed.y = 0 + yOffset;
 
     };
 

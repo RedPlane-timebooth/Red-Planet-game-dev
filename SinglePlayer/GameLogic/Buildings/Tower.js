@@ -76,13 +76,14 @@ var Tower = (function iife(parent) {
     Tower.prototype.getPersonalInfo = function getPersonalInfo() {
         var info = parent.prototype.getPersonalInfo.call(this);
         info.damage = this.getFireDamage();
-        info.fireSpeed = this.getFireSpeed() / 1000;
+        info.fireSpeed = 1000 / this.getFireSpeed();
         info.range = this.getRange();
         info.infoType = 'tower';
         return info;
     };
     Tower.prototype.showDialog = function showPersonalInfo() {
         parent.prototype.showDialog.call(this);
+        this.game.ui.showDialog(this.getPersonalInfo());
         if(this.game.circleBuild){
             this.game.circle.destroy();
             this.game.circleBuild = false;
@@ -93,7 +94,7 @@ var Tower = (function iife(parent) {
             this.game.circle.lineAlpha = ( (i * 5) / 3000);
             this.game.circle.drawCircle(0, 0, i);
         }
-        this.game.time.events.add(150, function () {
+        this.game.time.events.add(300, function () {
             this.game.circleBuild = true;
         }, this);
     };
