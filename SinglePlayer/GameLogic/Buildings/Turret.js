@@ -50,8 +50,10 @@ var Turret = (function iife(parent) {
         this.game.missileShoot.play();
         parent.prototype.fire.call(this);
         this.game.time.events.add(300, function(){
-            this.game.bullets.factory(this.x - 10, this.y - 30, this.nextTarget, this.bulletType,
-                this.fireDamage[this.upgrades.fireDamage]);
+            if(this.nextTarget) {
+                this.game.bullets.factory(this.x - 10, this.y - 30, this.nextTarget, this.bulletType,
+                    this.getFireDamage());
+            }
         }, this);
     };
     

@@ -27,10 +27,20 @@ var Tower = (function iife(parent) {
         };
 
         this.upgrades = {
-            fireSpeed : 0,
-            fireDamage : 0,
-            range : 0
-        }
+            fireSpeed: 0,
+            fireDamage: 0,
+            range: 0
+        };
+
+        this.getFireDamage = function getFireDamage() {
+            return this.fireDamage[this.upgrades.fireDamage];
+        };
+        this.getFireSpeed = function getFireSpeed() {
+            return this.fireSpeed[this.upgrades.fireSpeed];
+        };
+        this.getRange = function getRange() {
+            return this.range[this.upgrades.range];
+        };
     }
 
     Tower.prototype = Object.create(parent.prototype);
@@ -38,13 +48,13 @@ var Tower = (function iife(parent) {
 
     Tower.prototype.fire = function fire() {
         this.game.bullets.factory(this.x, this.y - 30, this.nextTarget, this.bulletType,
-            this.fireDamage[this.upgrades.fireDamage]);
+            this.getFireDamage());
     };
     Tower.prototype.findTarget = function findTarget() {
         if (!this.buffers.searchedForTarget.is) {
             nextTarget = null;
             this.game.enemies.forEachExists(function (enemy) {
-                if (this.game.physics.arcade.distanceBetween(this, enemy) < this.range[this.upgrades.range]) {
+                if (this.game.physics.arcade.distanceBetween(this, enemy) < this.getRange()) {
                     if (nextTarget === null || nextTarget.walked < enemy.walked) {
                         nextTarget = enemy;
                     }
@@ -59,39 +69,41 @@ var Tower = (function iife(parent) {
             this.findTarget();
             if (this.nextTarget && !this.buffers.fired.is) {
                 this.fire();
-                buffer(this.buffers.fired, this.fireSpeed[this.upgrades.fireSpeed], this.game);
+                buffer(this.buffers.fired, this.getFireSpeed(), this.game);
             }
         }
     };
     Tower.prototype.getPersonalInfo = function getPersonalInfo() {
         var info = parent.prototype.getPersonalInfo.call(this);
-        info.damage = this.fireDamage;
-        info.fireSpeed = this.fireSpeed / 1000;
-        info.range = this.range;
+        info.damage = this.getFireDamage();
+        info.fireSpeed = this.getFireSpeed() / 1000;
+        info.range = this.getRange();
         info.infoType = 'tower';
         return info;
     };
     Tower.prototype.showDialog = function showPersonalInfo() {
         parent.prototype.showDialog.call(this);
-
-        if(this.game.circle == null){
-            this.game.circle = this.game.add.graphics(this.x, this.y);
-            for (var i = 0; i < this.range[this.upgrades.range] * 2; i++) {
-                this.game.circle.lineStyle(1, 0xd3d3d3);
-                this.game.circle.lineAlpha = (i / 1000);
-                this.game.circle.drawCircle(0, 0, i);
-            }
-            this.game.time.events.add(500, function(){
-                this.game.canDestroyCircle = true;
-            }, this);
+        if(this.game.circleBuild){
+            this.game.circle.destroy();
+            this.game.circleBuild = false;
         }
+        this.game.circle = this.game.add.graphics(this.x, this.y);
+        for (var i = 1; i < this.getRange() * 2; i++) {
+            this.game.circle.lineStyle(1, 0xd3d3d3);
+            this.game.circle.lineAlpha = ( (i * 5) / 3000);
+            this.game.circle.drawCircle(0, 0, i);
+        }
+        this.game.time.events.add(150, function () {
+            this.game.circleBuild = true;
+        }, this);
     };
     Tower.prototype.upgrade = function upgrade(type) {
-        if(this.upgrades[type] < 4){
+        if (this.upgrades[type] < 4) {
             this.upgrades[type]++;
         } else {
             console.log('Cant upgrade');
         }
     };
+
     return Tower;
 }(Building));

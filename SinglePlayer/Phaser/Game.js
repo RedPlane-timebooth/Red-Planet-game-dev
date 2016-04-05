@@ -2,21 +2,7 @@ var RedPlanetGame = RedPlanetGame || {};
 
 RedPlanetGame.Game = (function iife() {
     'use strict';
-    var _this = null,
-        buffers = {
-            pressed: {
-                is: false
-            },
-            buildingOverlaps: {
-                is: false
-            },
-            movedToPointer: {
-                is: false
-            },
-            towerCircleDestroyed: {
-                is: false
-            }
-        };
+    var _this = null;
 
     RedPlanetGame.Game = function () {
         Phaser.State.call(this);
@@ -27,13 +13,22 @@ RedPlanetGame.Game = (function iife() {
     RedPlanetGame.Game.prototype.constructor = RedPlanetGame.Game;
 
     RedPlanetGame.Game.prototype.create = function create() {
+        this.buffers = {
+            pressed: {
+                is: false
+            },
+            towerCircleDestroyed: {
+                is: false
+            }
+        };
+        this.game.circleBuild = false;
         //A door for multyplayer
         this.players = [];
         this.game.player = new Player(1, 'Daniel', 1000);
         this.players.push(this.game.player);
 
         this.initMapLayersGroups();
-        this.initUI();
+        this.ui = new UserInterface(this.game);
 
         const creepYOffset = 15;
         setInterval(function () {
@@ -79,13 +74,11 @@ RedPlanetGame.Game = (function iife() {
 
         //Removes range cricle around tower when clicked somewhere else
         if (this.game.input.activePointer.isDown){
-            if (this.game.circle && !buffers.towerCircleDestroyed.is) {
-                if(this.game.canDestroyCircle){
+            if (this.game.circleBuild && !this.buffers.pressed.is) {
                     this.game.circle.destroy();
-                    this.game.circle = null;
                     this.game.canDestroyCircle = false;
-                }
-                buffer(buffers.towerCircleDestroyed, 100, this.game);
+                buffer(this.buffers.pressed, 100, this.game);
+                this.game.circleBuild = false;
             }
         }
 
@@ -108,7 +101,7 @@ RedPlanetGame.Game = (function iife() {
         });
 
         //updates (static) position of UI
-        this.updateUI(this.game.camera.x, this.game.camera.y);
+        this.ui.update(this.game.camera.x, this.game.camera.y);
     };
 
     RedPlanetGame.Game.prototype.render = function render() {
@@ -146,40 +139,6 @@ RedPlanetGame.Game = (function iife() {
     };
 
     RedPlanetGame.Game.prototype.initUI = function initUI() {
-        // this.ui = {};
-        // //text and player info
-        // var textX = 150;
-        // var textY = 0;
-        // this.ui.gold = this.game.add.text(textX, textY, 'gold: ' + this.game.player.gold,
-        //     {font: "24px Arial", fill: '#FFD700'}
-        // );
-        //
-        // textX = 300;
-        // textY = 0;
-        // this.ui.killed = this.game.add.text(textX, textY, 'killed: ' + this.game.player.gold,
-        //     {font: "24px Arial", fill: '#ff00ff'}
-        // );
-        //
-        // this.ui.turret = new WorldObject(_this.game, 0, 0, 'turret', 0);
-        // this.ui.turret.scale.setTo(0.5);
-        // this.ui.turret.inputEnabled = true;
-        // this.ui.turret.events.onInputDown.add(onClickButtonTower1, this);
-        // function onClickButtonTower1() {
-        //     _this.game.cursorType = CURSOR_TYPE.TURRET;
-        //     _this.game.buildState = true;
-        //     _this.game.canBuild = false;
-        //     _this.game.time.events.add(1000, function () {
-        //         _this.game.canBuild = true
-        //     }, this);
-        // }
-        //
-        // this.ui.turret.events.onInputOver.add(function () {
-        //     this.game.cursorType = CURSOR_TYPE.POINTER;
-        // }, this);
-        //
-        // this.ui.turret.events.onInputOut.add(function () {
-        //     this.game.cursorType = CURSOR_TYPE.NORMAL;
-        // }, this);
         this.ui = new UserInterface(this.game);
     };
 
@@ -190,7 +149,7 @@ RedPlanetGame.Game = (function iife() {
         // this.ui.gold.y = 0 + yOffset;
         // this.ui.killed.x = 300 + xOffset;
         // this.ui.killed.y = 0 + yOffset;
-        this.ui.update(xOffset, yOffset);
+
     };
 
     RedPlanetGame.Game.prototype.followCamera = function followCamera() {
@@ -212,7 +171,7 @@ RedPlanetGame.Game = (function iife() {
         var xOffset,
             yOffset,
             buildingType;
-        if (this.game.input.activePointer.leftButton.isDown && this.game.canBuild && !buffers.pressed.is) {//yo Yoda
+        if (this.game.input.activePointer.leftButton.isDown && this.game.canBuild && !this.buffers.pressed.is) {//yo Yoda
             switch (this.game.cursorType) {
                 case CURSOR_TYPE.TURRET:
                     xOffset = 22 + this.game.camera.x;
@@ -238,7 +197,7 @@ RedPlanetGame.Game = (function iife() {
             this.game.buildState = false;
             this.game.canBuild = false;
             this.game.cursorType = CURSOR_TYPE.NORMAL;
-            buffer(buffers.pressed, 400, this.game);
+            buffer(this.buffers.pressed, 400, this.game);
         }
     };
 

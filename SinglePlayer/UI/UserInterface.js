@@ -17,7 +17,7 @@ var UserInterface = (function iife() {
             {font: "24px Arial", fill: '#ff00ff'}
         );
 
-        //turret
+        //turret build
         this.turretX = 300;
         this.turretY = 500;
         this.turret = new WorldObject(_this.game, 0, 0, 'turret', 0);
@@ -40,6 +40,15 @@ var UserInterface = (function iife() {
         this.turret.events.onInputOut.add(function () {
             this.game.cursorType = CURSOR_TYPE.NORMAL;
         }, this);
+
+        this.dialog = {};
+        this.dialog.tower = {};
+        this.dialog.unit = {};
+        this.dialog.tower.sprite = null;
+        this.dialog.tower.health = null;
+        this.dialog.tower.damage = null;
+        this.dialog.tower.range = null;
+        this.dialog.tower.fireDamage = null;
     }
 
     UserInterface.prototype.update = function update(xOffset, yOffset) {
@@ -50,6 +59,9 @@ var UserInterface = (function iife() {
         this.killed.x = this.killedX + xOffset;
         this.killed.y = this.killedY + yOffset;
     };
-    
+    UserInterface.prototype.showDialog = function showDialog(dialog){
+        this.dialog[dialog.type] = dialog;
+    };
+
     return UserInterface;
 }());
