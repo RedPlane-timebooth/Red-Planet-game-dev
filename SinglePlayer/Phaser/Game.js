@@ -18,7 +18,7 @@ RedPlanetGame.Game = (function iife() {
                 is: false
             }
         };
-        this.game.circleBuild = false;
+        this.game.dialogOn = false;
         //A door for multyplayer
         this.players = [];
         this.game.player = new Player(1, 'Daniel', 1000);
@@ -71,11 +71,12 @@ RedPlanetGame.Game = (function iife() {
 
         //Removes range cricle around tower when clicked somewhere else
         if (this.game.input.activePointer.isDown) {
-            if (this.game.circleBuild && !this.buffers.pressed.is) {
+            if (this.game.dialogOn && !this.buffers.pressed.is) {
                 buffer(this.buffers.pressed, 90, this.game);
                 this.game.circle.destroy();
+                this.game.ui.hideDialog();
                 this.game.canDestroyCircle = false;
-                this.game.circleBuild = false;
+                this.game.dialogOn = false;
             }
         }
 

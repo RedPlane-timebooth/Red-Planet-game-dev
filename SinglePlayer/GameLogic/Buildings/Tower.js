@@ -83,11 +83,12 @@ var Tower = (function iife(parent) {
     };
     Tower.prototype.showDialog = function showPersonalInfo() {
         parent.prototype.showDialog.call(this);
-        this.game.ui.showDialog(this.getPersonalInfo());
-        if(this.game.circleBuild){
+        if(this.game.dialogOn){
             this.game.circle.destroy();
-            this.game.circleBuild = false;
+            this.game.ui.hideDialog();
+            this.game.dialogOn = false;
         }
+        this.game.ui.showDialog(this.getPersonalInfo());
         this.game.circle = this.game.add.graphics(this.x, this.y);
         for (var i = 1; i < this.getRange() * 2; i++) {
             this.game.circle.lineStyle(1, 0xd3d3d3);
@@ -95,7 +96,7 @@ var Tower = (function iife(parent) {
             this.game.circle.drawCircle(0, 0, i);
         }
         this.game.time.events.add(300, function () {
-            this.game.circleBuild = true;
+            this.game.dialogOn = true;
         }, this);
     };
     Tower.prototype.upgrade = function upgrade(type) {

@@ -87,5 +87,14 @@ var UserInterface = (function iife() {
         }
     };
 
+    UserInterface.prototype.hideDialog = function showDialog(){
+        //if(this.dialog.tower.show){
+            this.dialog.tower.show = false;
+            this.dialog.tower.sprite.visible = false;
+            this.dialog.tower.damage.visible = false;
+            this.dialog.tower.speed.visible = false;
+            this.dialog.tower.range.visible = false;
+        //}
+    };
     return UserInterface;
 }());
