@@ -115,9 +115,7 @@ var Tower = (function iife(parent) {
             this.game.circle.lineAlpha = ( (i * 5) / 3000);
             this.game.circle.drawCircle(0, 0, i);
         }
-        this.game.time.events.add(300, function () {
-            this.game.dialogOn = true;
-        }, this);
+        this.game.dialogOn = true;
     };
     Tower.prototype.upgrade = function upgrade(type) {
         if (this.upgrades[type] < 4) {

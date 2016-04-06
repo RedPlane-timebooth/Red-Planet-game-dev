@@ -70,7 +70,7 @@ RedPlanetGame.Game = (function iife() {
         }
 
         //Removes range cricle around tower when clicked somewhere else
-        if (this.game.input.activePointer.isDown) {
+        if (this.game.input.activePointer.isDown && this.game.cursorType == CURSOR_TYPE.NORMAL) {
             if (this.game.dialogOn && !this.buffers.pressed.is) {
                 buffer(this.buffers.pressed, 90, this.game);
                 this.game.circle.destroy();
