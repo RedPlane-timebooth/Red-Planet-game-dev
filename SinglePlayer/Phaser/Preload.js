@@ -24,7 +24,8 @@ RedPlanetGame.Preload = (function iife() {
             this.load.audio('missileShoot', '/assets/buildings/towers/turret/missileShoot.mp3');
             this.load.audio('missileExplosion', '/assets/buildings/towers/turret/missileExplosion.mp3');
             this.load.image('missile', '/assets/buildings/towers/turret/missile.png');
-            this.load.image('bullet', '/assets/images/bullet.png');
+            this.load.spritesheet('uiBackground', '/assets/images/uiBackground1.png', 800, 151, 1);
+            this.load.image('upgradeButton', '/assets/images/upgrade-button.png');
             this.load.tilemap('sample2', '/assets/maps/sample2.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.image('gameTiles', '/assets/images/32x32_map_tile v3.1 [MARGINLESS].png');
         },

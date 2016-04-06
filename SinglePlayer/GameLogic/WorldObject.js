@@ -35,6 +35,7 @@ var WorldObject = (function iife(parent) {
         }
     };
     WorldObject.prototype.showDialog = function showPersonalInfo() {
+        this.game.selected = this;
         console.log(this.getPersonalInfo());
     };
 

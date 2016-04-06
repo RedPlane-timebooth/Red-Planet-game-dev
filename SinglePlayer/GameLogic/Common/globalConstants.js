@@ -1,4 +1,4 @@
-const gameWidth = 600;
+const gameWidth = 800;
 const gameHeight = 600;
 const UNIT_TYPES = {
     CREEP1 : 'creep1'

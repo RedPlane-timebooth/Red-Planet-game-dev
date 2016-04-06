@@ -103,8 +103,8 @@ RedPlanetGame.Game = (function iife() {
     };
 
     RedPlanetGame.Game.prototype.render = function render() {
-        this.game.ui.gold.text = 'gold: ' + this.game.player.gold;
-        this.game.ui.killed.text = 'killed: ' + this.game.player.killed;
+        this.game.ui.gold.text = 'G: ' + this.game.player.gold;
+        this.game.ui.killed.text = 'K: ' + this.game.player.killed;
     };
 
     RedPlanetGame.Game.prototype.initMapLayersGroups = function init() {
@@ -121,8 +121,8 @@ RedPlanetGame.Game = (function iife() {
         this.destinationForCreeps = this.map.objects['objectsLayer'][1];
         //resize world
         this.backgroundlayer.resizeWorld();
-        //this.game.world.setBounds(0, 0, 100, 100);
-        //groups
+        this.game.world.setBounds(0, 0, 800, 750);
+        //group
         this.game.enemies = new UnitsPoolFactory(this.game);
         this.game.buildings = this.game.add.group();//TODO: make buildings for each player
         this.game.bullets = new BulletsPoolFactory(this.game);
@@ -138,12 +138,12 @@ RedPlanetGame.Game = (function iife() {
 
     RedPlanetGame.Game.prototype.followCamera = function followCamera() {
         //Camera follow cursor
-        if (this.game.input.mousePointer.x > gameHeight - gameHeight / 10) {
+        if (this.game.input.mousePointer.x > gameWidth - gameWidth / 10) {
             this.game.camera.x += 10;
         } else if (this.game.input.mousePointer.x <= 100) {
             this.game.camera.x -= 10
         }
-        if (this.game.input.mousePointer.y > gameWidth - gameWidth / 10) {
+        if (this.game.input.mousePointer.y > gameHeight - gameHeight / 10) {
             this.game.camera.y += 10;
         } else if (this.game.input.mousePointer.y <= 100) {
             this.game.camera.y -= 10;

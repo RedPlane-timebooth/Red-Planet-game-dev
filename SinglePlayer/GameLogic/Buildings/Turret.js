@@ -13,12 +13,23 @@ var Turret = (function iife(parent) {
     const RANGE = [
         60, 70, 85, 100, 120
     ];
+    const FIRE_DAMAGE_UPGRADE_COST = [
+        80, 200, 440, 890, 1800
+    ];
+    const FIRE_SPEED_UPGRADE_COST  = [
+        80, 200, 440, 890, 1800
+    ];
+    const RANGE_UPGRADE_COST  = [
+        80, 200, 440, 890, 1800
+    ];
     
     const SCALE = 1;
     const BULLET_TYPE = BULLET_TYPES.BULLET;
     
     function Turret(game, x, y, player) {
-        parent.call(this, game, x, y, spriteSheetLevel1, START_FRAME, player, BULLET_TYPE, FIRE_DAMAGE, FIRE_SPEED, SCALE, RANGE);
+        parent.call(this, game, x, y, spriteSheetLevel1, START_FRAME, player, 
+            BULLET_TYPE, FIRE_DAMAGE, FIRE_SPEED, SCALE, RANGE,
+            FIRE_DAMAGE_UPGRADE_COST, FIRE_SPEED_UPGRADE_COST, RANGE_UPGRADE_COST);
         this.exists = false;
 
         this.foundations = new WorldObject(this.game, this.x, this.y, 'turretFoundations', 0);

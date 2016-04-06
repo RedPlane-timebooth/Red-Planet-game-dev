@@ -24,6 +24,7 @@ RedPlanetGame.Boot = (function iife() {
             this.scale.pageAlignHorizontally = true;
             this.scale.pageAlignVertically = true;
 
+
             //physics system
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
 

@@ -2,7 +2,9 @@ var Tower = (function iife(parent) {
     'use strict';
     var nextTarget = null;
 
-    function Tower(game, x, y, spriteName, startFrame, player, bulletType, fireDamage, fireSpeed, scale, range) {
+    function Tower(game, x, y, spriteName, startFrame, player,
+                   bulletType, fireDamage, fireSpeed, scale, range,
+                   fireDamageUpgradeCost, fireSpeedUpgradeCost, rangeUpgradeCost) {
         parent.call(this, game, x, y, spriteName, startFrame, player);
 
         validator.validateIfString(bulletType, this.constructor + ' bulletType');
@@ -10,12 +12,18 @@ var Tower = (function iife(parent) {
         validator.validateIfUndefined(fireSpeed, this.constructor + ' fireSpeed');
         validator.validateIfNumber(scale, this.constructor + ' scale');
         validator.validateIfUndefined(range, this.constructor + ' range');
+        validator.validateIfUndefined(fireDamageUpgradeCost, this.constructor + ' fireDamageUpgradeCost');
+        validator.validateIfUndefined(fireSpeedUpgradeCost, this.constructor + ' fireSpeedUpgradeCost');
+        validator.validateIfUndefined(rangeUpgradeCost, this.constructor + ' rangeUpgradeCost');
 
         this.bulletType = bulletType;
         this.fireDamage = fireDamage;
         this.fireSpeed = fireSpeed;
         this.scale.setTo(scale);
         this.range = range;
+        this.fireDamageUpgradeCost = fireDamageUpgradeCost;
+        this.fireSpeedUpgradeCost = fireSpeedUpgradeCost;
+        this.rangeUpgradeCost = rangeUpgradeCost;
         this.nextTarget = null;
         this.buffers = {
             fired: {
@@ -40,6 +48,15 @@ var Tower = (function iife(parent) {
         };
         this.getRange = function getRange() {
             return this.range[this.upgrades.range];
+        };
+        this.getFireDamageUpgradeCost = function getFireDamageUpgradeCost() {
+            return this.fireDamageUpgradeCost[this.upgrades.fireDamage];
+        };
+        this.getFireSpeedUpgradeCost = function getFireSpeedUpgradeCost() {
+            return this.fireSpeedUpgradeCost[this.upgrades.fireSpeed];
+        };
+        this.getRangeUpgradeCost = function getRangeUpgradeCost() {
+            return this.rangeUpgradeCost[this.upgrades.range];
         };
     }
 
@@ -79,11 +96,14 @@ var Tower = (function iife(parent) {
         info.fireSpeed = 1000 / this.getFireSpeed();
         info.range = this.getRange();
         info.infoType = 'tower';
+        info.fireDamageUpgradeCost = this.getFireDamageUpgradeCost();
+        info.fireSpeedUpgradeCost = this.getFireSpeedUpgradeCost();
+        info.rangeUpgradeCost = this.getRangeUpgradeCost();
         return info;
     };
     Tower.prototype.showDialog = function showPersonalInfo() {
         parent.prototype.showDialog.call(this);
-        if(this.game.dialogOn){
+        if (this.game.dialogOn) {
             this.game.circle.destroy();
             this.game.ui.hideDialog();
             this.game.dialogOn = false;
